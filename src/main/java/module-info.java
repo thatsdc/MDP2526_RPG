@@ -5,4 +5,6 @@ module it.unicam.cs.mpgc.rpg129072 {
 
     opens it.unicam.cs.mpgc.rpg129072 to javafx.fxml;
     exports it.unicam.cs.mpgc.rpg129072;
+    exports it.unicam.cs.mpgc.rpg129072.controllers;
+    opens it.unicam.cs.mpgc.rpg129072.controllers to javafx.fxml;
 }
