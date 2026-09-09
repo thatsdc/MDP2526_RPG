@@ -2,24 +2,34 @@ package it.unicam.cs.mpgc.rpg129072.controllers;
 
 import javafx.stage.Stage;
 
-public class MenuController {
+public class MenuController extends Controller {
+    Runnable onStartClick;
+    Runnable onLeaderboardClick;
+    Runnable onSettingsClick;
 
-    private final Stage stage;
-
-    public MenuController(Stage stage){
-        this.stage = stage;
+    public MenuController(Stage stage,
+                          Runnable onStartClick,
+                          Runnable onLeaderboardClick,
+                          Runnable onSettingsClick){
+        this.onStartClick = onStartClick;
+        this.onLeaderboardClick = onLeaderboardClick;
+        this.onSettingsClick = onSettingsClick;
+        super(stage);
     }
 
     public void startGame(){
-        System.out.println("Starting the game...");
+        onStartClick.run();
     }
 
     public void openSettings(){
-        System.out.println("Opening options...");
+        onSettingsClick.run();
+    }
+
+    public void openLeaderboard() {
+        onLeaderboardClick.run();
     }
 
     public void quitGame(){
         stage.close();
     }
-
 }

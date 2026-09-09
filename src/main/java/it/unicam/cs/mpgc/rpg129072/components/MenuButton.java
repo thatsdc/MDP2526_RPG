@@ -3,11 +3,9 @@ package it.unicam.cs.mpgc.rpg129072.components;
 import javafx.scene.control.Button;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.event.EventHandler;
-import javafx.event.ActionEvent;
 
 public class MenuButton extends Button {
-    public MenuButton(String text, EventHandler<ActionEvent> onClick) {
+    public MenuButton(String text, Runnable onClick) {
         super(text);
         this.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 
@@ -34,6 +32,6 @@ public class MenuButton extends Button {
         this.setOnMouseExited(e -> this.setStyle(defaultStyle));
 
         // Set function to execute on click
-        this.setOnAction(onClick);
+        this.setOnAction(e -> onClick.run());
     }
 }
