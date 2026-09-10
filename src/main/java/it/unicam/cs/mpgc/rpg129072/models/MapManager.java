@@ -1,14 +1,9 @@
 package it.unicam.cs.mpgc.rpg129072.models;
 
+import it.unicam.cs.mpgc.rpg129072.components.MapCharacter;
 import javafx.scene.input.KeyCode;
 
 public class MapManager {
-
-    private double playerX = 100;
-    private double playerY = 100;
-    private final double playerSize = 32;
-    private final double playerSpeed = 16;
-
     private final String playerName;
     private int playerScore = 0;
 
@@ -23,36 +18,32 @@ public class MapManager {
     public MapManager(String playerName) {
         this.playerName = playerName;
         this.crushedWheatMap = new boolean[columns][rows];
-
-        // Initial crush where the player spawns
-        crushWheatAtPosition(playerX + playerSize / 2, playerY + playerSize / 2);
     }
 
     /**
      * Processes keyboard input to move the player.
      * Returns true if the state changed and the screen needs to be re-rendered.
      */
-    public boolean handleKeyPress(KeyCode key) {
+    public boolean handleKeyPress(KeyCode key, MapCharacter mapCharacter) {
         boolean moved = false;
 
         if (key == KeyCode.W || key == KeyCode.UP) {
-            this.playerY -= this.playerSpeed;
+            mapCharacter.move(0, -mapCharacter.getSpeed(), mapWidth, mapHeight);
             moved = true;
         } else if (key == KeyCode.S || key == KeyCode.DOWN) {
-            this.playerY += this.playerSpeed;
+            mapCharacter.move(0, mapCharacter.getSpeed(), mapWidth, mapHeight);
             moved = true;
         } else if (key == KeyCode.A || key == KeyCode.LEFT) {
-            this.playerX -= this.playerSpeed;
-            moved = true;
+            mapCharacter.move(-mapCharacter.getSpeed(),0, mapWidth, mapHeight);
+             moved = true;
         } else if (key == KeyCode.D || key == KeyCode.RIGHT) {
-            this.playerX += this.playerSpeed;
+            mapCharacter.move(mapCharacter.getSpeed(),0, mapWidth, mapHeight);
             moved = true;
         }
 
         if (moved) {
-            this.playerX = Math.max(0, Math.min(this.playerX, this.mapWidth - this.playerSize));
-            this.playerY = Math.max(0, Math.min(this.playerY, this.mapHeight - this.playerSize));
-            crushWheatAtPosition(this.playerX + this.playerSize / 2, this.playerY + this.playerSize / 2);
+            crushWheatAtPosition(mapCharacter.getPositionX() + mapCharacter.getRenderedWidth() / 2,
+                    mapCharacter.getPositionY() + mapCharacter.getRenderedHeight() / 2);
         }
 
         return moved;
@@ -69,10 +60,6 @@ public class MapManager {
             }
         }
     }
-
-    public double getPlayerX() { return this.playerX; }
-    public double getPlayerY() { return this.playerY; }
-    public double getPlayerSize() { return this.playerSize; }
 
     public String getPlayerName() { return this.playerName; }
     public int getPlayerScore() { return this.playerScore; }

@@ -1,5 +1,6 @@
 package it.unicam.cs.mpgc.rpg129072.screens;
 
+import it.unicam.cs.mpgc.rpg129072.components.MapCharacter;
 import it.unicam.cs.mpgc.rpg129072.controllers.MapController;
 import it.unicam.cs.mpgc.rpg129072.models.MapManager;
 import javafx.scene.Scene;
@@ -21,6 +22,8 @@ public class MapScreen extends Canvas implements Renderable {
     private final MapController mapController;
     private final MapManager mapManager;
 
+    private MapCharacter player;
+
     private final GraphicsContext gc;
 
     private final Image wheat;
@@ -31,10 +34,21 @@ public class MapScreen extends Canvas implements Renderable {
 
     public MapScreen(MapController mapController, MapManager mapManager) {
         // Set canvas dimensions based on grid size
-        super(15 * 64, 10 * 64);
+        int gridWidth = 15;
+        int gridHeight = 10;
+        int blockSize = 64;
+        super(gridWidth * blockSize, gridHeight * blockSize);
 
         this.mapController = mapController;
         this.mapManager = mapManager;
+
+        this.player = new MapCharacter(
+                "/elf-lord.png",
+                100, 100,
+                16, 16,
+                4, 2.5
+            );
+
         this.gc = this.getGraphicsContext2D();
 
         this.wheat = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/wheat_tile.png")));
@@ -64,10 +78,7 @@ public class MapScreen extends Canvas implements Renderable {
             }
         }
 
-        gc.setFill(Color.BLUE);
-
-        double playerSize = mapManager.getPlayerSize();
-        gc.fillRect(mapManager.getPlayerX(), mapManager.getPlayerY(), playerSize, playerSize);
+        this.player.render(gc);
     }
 
     /**
@@ -121,7 +132,7 @@ public class MapScreen extends Canvas implements Renderable {
         // Handle player movement
         mapScene.setOnKeyPressed(event -> {
             KeyCode key = event.getCode();
-            mapManager.handleKeyPress(key);
+            mapManager.handleKeyPress(key, player);
             this.render();
         });
 
