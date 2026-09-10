@@ -21,8 +21,9 @@ public class MapController extends Controller {
     private final double mapWidth = columns * tileSize;
     private final double mapHeight = rows * tileSize;
 
-    public MapController(Stage stage) {
+    public MapController(Stage stage, String playerName) {
         super(stage);
+        this.playerName = playerName;
         this.crushedWheatMap = new boolean[columns][rows];
 
         // Initial crush where the player spawns

@@ -10,6 +10,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class GameNavigation extends Application {
 
@@ -33,7 +37,8 @@ public class GameNavigation extends Application {
         mainStage.show();
     }
 
-    private void navigateTo(Route route){
+
+    private void navigateTo(Route route, Map<String, String> payload){
         switch (route) {
             case MENU:
                 if (menuScene == null){
@@ -51,9 +56,9 @@ public class GameNavigation extends Application {
             case SET_NAME:
                 if (setNameScene == null) {
                     SetNameController setNameController = new SetNameController(
-                            mainStage,
-                            () -> navigateTo(Route.MENU),
-                            (name) -> navigateTo(Route.INTRO)
+                        mainStage,
+                        () -> navigateTo(Route.MENU),
+                        (playerName) -> navigateTo(Route.INTRO, Map.of("playerName", playerName))
                     );
                     setNameScene = new SetNameScreen(setNameController).generateScene();
                 }
@@ -62,10 +67,12 @@ public class GameNavigation extends Application {
 
             case INTRO:
                 if (introScene == null){
+                    String playerName = payload.get("playerName");
+
                     IntroController introController = new IntroController(
-                            mainStage,
-                            () -> navigateTo(Route.GAME_MAP)
-                            );
+                        mainStage,
+                        () -> navigateTo(Route.GAME_MAP, Map.of("playerName", playerName))
+                        );
                     introScene = new IntroScreen(introController).generateScene();
                 }
                 mainStage.setScene(introScene);
@@ -73,13 +80,17 @@ public class GameNavigation extends Application {
 
             case GAME_MAP:
                 if (mapScene == null){
-                    MapController mapController = new MapController(mainStage);
+                    String playerName = payload.get("playerName");
+                    MapController mapController = new MapController(mainStage, playerName);
                     mapScene = new MapScreen(mapController).generateScene();
                 }
                 mainStage.setScene(mapScene);
                 break;
 
         };
+    }
 
+    private void navigateTo(Route route){
+        navigateTo(route, Collections.emptyMap());
     }
 }
