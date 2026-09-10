@@ -4,6 +4,7 @@ import it.unicam.cs.mpgc.rpg129072.controllers.IntroController;
 import it.unicam.cs.mpgc.rpg129072.controllers.MapController;
 import it.unicam.cs.mpgc.rpg129072.controllers.MenuController;
 import it.unicam.cs.mpgc.rpg129072.controllers.SetNameController;
+import it.unicam.cs.mpgc.rpg129072.models.MapManager;
 import it.unicam.cs.mpgc.rpg129072.screens.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -81,8 +82,9 @@ public class GameNavigation extends Application {
             case GAME_MAP:
                 if (mapScene == null){
                     String playerName = payload.get("playerName");
-                    MapController mapController = new MapController(mainStage, playerName);
-                    mapScene = new MapScreen(mapController).generateScene();
+                    MapController mapController = new MapController(mainStage);
+                    MapManager mapManager = new MapManager(playerName);
+                    mapScene = new MapScreen(mapController, mapManager).generateScene();
                 }
                 mainStage.setScene(mapScene);
                 break;

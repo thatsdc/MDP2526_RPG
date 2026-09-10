@@ -1,6 +1,7 @@
 package it.unicam.cs.mpgc.rpg129072.screens;
 
 import it.unicam.cs.mpgc.rpg129072.controllers.MapController;
+import it.unicam.cs.mpgc.rpg129072.models.MapManager;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,6 +19,8 @@ import java.util.Objects;
 public class MapScreen extends Canvas implements Renderable {
 
     private final MapController mapController;
+    private final MapManager mapManager;
+
     private final GraphicsContext gc;
 
     private final Image wheat;
@@ -26,11 +29,12 @@ public class MapScreen extends Canvas implements Renderable {
     private Text scoreTextElement;
     private Text playerTextElement;
 
-    public MapScreen(MapController mapController) {
+    public MapScreen(MapController mapController, MapManager mapManager) {
         // Set canvas dimensions based on grid size
         super(15 * 64, 10 * 64);
 
         this.mapController = mapController;
+        this.mapManager = mapManager;
         this.gc = this.getGraphicsContext2D();
 
         this.wheat = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/wheat_tile.png")));
@@ -47,11 +51,11 @@ public class MapScreen extends Canvas implements Renderable {
         gc.clearRect(0, 0, this.getWidth(), this.getHeight());
 
         // Render the wheat map
-        for (int x = 0; x < mapController.getColumns(); x++) {
-            for (int y = 0; y < mapController.getRows(); y++) {
+        for (int x = 0; x < mapManager.getColumns(); x++) {
+            for (int y = 0; y < mapManager.getRows(); y++) {
 
-                int tileSize = mapController.getTileSize();
-                Image tileToDraw = mapController.isWheatCrushed(x, y) ? this.trampledWheat : this.wheat;
+                int tileSize = mapManager.getTileSize();
+                Image tileToDraw = mapManager.isWheatCrushed(x, y) ? this.trampledWheat : this.wheat;
                 gc.drawImage(tileToDraw, x * tileSize, y * tileSize, tileSize, tileSize);
 
                 // Subtle border for tiles
@@ -62,8 +66,8 @@ public class MapScreen extends Canvas implements Renderable {
 
         gc.setFill(Color.BLUE);
 
-        double playerSize = mapController.getPlayerSize();
-        gc.fillRect(mapController.getPlayerX(), mapController.getPlayerY(), playerSize, playerSize);
+        double playerSize = mapManager.getPlayerSize();
+        gc.fillRect(mapManager.getPlayerX(), mapManager.getPlayerY(), playerSize, playerSize);
     }
 
     /**
@@ -71,8 +75,8 @@ public class MapScreen extends Canvas implements Renderable {
      */
     private void updateUI() {
         if (this.scoreTextElement != null && this.playerTextElement != null) {
-            this.scoreTextElement.setText("Score: " + mapController.getPlayerScore());
-            this.playerTextElement.setText("Player: " + mapController.getPlayerName());
+            this.scoreTextElement.setText("Score: " + mapManager.getPlayerScore());
+            this.playerTextElement.setText("Player: " + mapManager.getPlayerName());
         }
     }
 
@@ -82,13 +86,13 @@ public class MapScreen extends Canvas implements Renderable {
         uiLayer.setPickOnBounds(false);
 
         // Setup Player Name Text
-        this.playerTextElement = new Text("Player: " + mapController.getPlayerName());
+        this.playerTextElement = new Text("Player: " + mapManager.getPlayerName());
         this.playerTextElement.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         this.playerTextElement.setFill(Color.WHITE);
         this.playerTextElement.setStroke(Color.BLACK); // Outline for visibility
 
         // Setup Score Text
-        this.scoreTextElement = new Text("Score: " + mapController.getPlayerScore());
+        this.scoreTextElement = new Text("Score: " + mapManager.getPlayerScore());
         this.scoreTextElement.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         this.scoreTextElement.setFill(Color.WHITE);
         this.scoreTextElement.setStroke(Color.BLACK);
@@ -117,7 +121,7 @@ public class MapScreen extends Canvas implements Renderable {
         // Handle player movement
         mapScene.setOnKeyPressed(event -> {
             KeyCode key = event.getCode();
-            mapController.handleKeyPress(key);
+            mapManager.handleKeyPress(key);
             this.render();
         });
 
