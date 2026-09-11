@@ -35,10 +35,10 @@ public class CombatScreen extends Canvas implements Renderable {
         this.combatManager = combatManager;
         this.gc = this.getGraphicsContext2D();
 
-        this.backgroundImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/combat-background.jpg")));
+        this.backgroundImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/background/combat-background.jpg")));
 
-        this.playerImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/elf-lord-combat.png")));
-        this.enemyImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/merfolk-combat.png")));
+        this.playerImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/characters/combat/elf-lord.png")));
+        this.enemyImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/characters/combat/merfolk.png")));
 
         this.render();
     }

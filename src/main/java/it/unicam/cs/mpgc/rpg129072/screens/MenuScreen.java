@@ -21,7 +21,7 @@ public class MenuScreen extends StackPane implements Renderable {
         // Main layout for the game menu
         this.setAlignment(Pos.CENTER);
 
-        String gifPath = getClass().getResource("/menu-screen-background.gif").toExternalForm();
+        String gifPath = getClass().getResource("/background/menu-background.gif").toExternalForm();
         Image backgroundGif = new Image(gifPath);
         ImageView backgroundView = new ImageView(backgroundGif);
 

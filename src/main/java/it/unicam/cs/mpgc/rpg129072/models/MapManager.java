@@ -28,7 +28,7 @@ public class MapManager {
         this.crushedWheatMap = new boolean[columns][rows];
 
         this.player = new MapCharacter(
-        "/elf-lord.png",
+                "/characters/map/elf-lord.png",
             100, 80,
         16, 16,
         4, 2.5

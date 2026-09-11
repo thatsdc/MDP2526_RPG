@@ -43,8 +43,8 @@ public class MapScreen extends Canvas implements Renderable {
 
         this.gc = this.getGraphicsContext2D();
 
-        this.wheat = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/wheat_tile.png")));
-        this.trampledWheat = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/wheat_tile_trampled.png")));
+        this.wheat = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/map_tiles/wheat_tile.png")));
+        this.trampledWheat = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/map_tiles/wheat_tile_trampled.png")));
 
         this.render();
     }
