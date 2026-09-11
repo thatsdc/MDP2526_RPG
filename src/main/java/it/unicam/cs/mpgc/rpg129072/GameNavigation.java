@@ -1,9 +1,8 @@
 package it.unicam.cs.mpgc.rpg129072;
 
-import it.unicam.cs.mpgc.rpg129072.controllers.IntroController;
-import it.unicam.cs.mpgc.rpg129072.controllers.MapController;
-import it.unicam.cs.mpgc.rpg129072.controllers.MenuController;
-import it.unicam.cs.mpgc.rpg129072.controllers.SetNameController;
+import it.unicam.cs.mpgc.rpg129072.controllers.*;
+import it.unicam.cs.mpgc.rpg129072.enums.Route;
+import it.unicam.cs.mpgc.rpg129072.models.CombatManager;
 import it.unicam.cs.mpgc.rpg129072.models.MapManager;
 import it.unicam.cs.mpgc.rpg129072.screens.*;
 import javafx.application.Application;
@@ -12,9 +11,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class GameNavigation extends Application {
 
@@ -24,6 +21,10 @@ public class GameNavigation extends Application {
     private Scene introScene;
     private Scene setNameScene;
     private Scene mapScene;
+    private Scene combatScene;
+
+    private final int SCREEN_WIDTH = 1280;
+    private final int SCREEN_HEIGHT = 720;
 
 
     @Override
@@ -32,8 +33,8 @@ public class GameNavigation extends Application {
 
         navigateTo(Route.MENU);
         mainStage.setTitle("Game Title");
-        mainStage.setWidth(1280);
-        mainStage.setHeight(720);
+        mainStage.setWidth(SCREEN_WIDTH);
+        mainStage.setHeight(SCREEN_HEIGHT);
         mainStage.setResizable(false);
         mainStage.show();
     }
@@ -72,23 +73,39 @@ public class GameNavigation extends Application {
 
                     IntroController introController = new IntroController(
                         mainStage,
-                        () -> navigateTo(Route.GAME_MAP, Map.of("playerName", playerName))
+                        () -> navigateTo(Route.MAP, Map.of("playerName", playerName))
                         );
                     introScene = new IntroScreen(introController).generateScene();
                 }
                 mainStage.setScene(introScene);
                 break;
 
-            case GAME_MAP:
+            case MAP:
                 if (mapScene == null){
                     String playerName = payload.get("playerName");
-                    MapController mapController = new MapController(mainStage);
+                    MapController mapController = new MapController(
+                        mainStage,
+                        (args) -> navigateTo(Route.COMBAT, args)
+                    );
                     MapManager mapManager = new MapManager(playerName);
                     mapScene = new MapScreen(mapController, mapManager).generateScene();
                 }
                 mainStage.setScene(mapScene);
                 break;
 
+            case COMBAT:
+                if (combatScene == null){
+                    String playerName = "playerName";
+                    int playerHealth = 100;
+                    String enemyName = "enemyName";
+                    int enemyHealth = 100;
+
+                    CombatController combatController = new CombatController(mainStage);
+                    CombatManager combatManager = new CombatManager(playerName, playerHealth, enemyName, enemyHealth);
+                    combatScene = new CombatScreen(combatController, combatManager, SCREEN_WIDTH, SCREEN_HEIGHT).generateScene();
+                }
+                mainStage.setScene(combatScene);
+                break;
         };
     }
 

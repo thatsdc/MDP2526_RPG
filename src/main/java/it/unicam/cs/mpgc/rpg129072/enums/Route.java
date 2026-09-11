@@ -1,4 +1,4 @@
-package it.unicam.cs.mpgc.rpg129072.screens;
+package it.unicam.cs.mpgc.rpg129072.enums;
 
 public enum Route {
     MENU,
@@ -6,5 +6,6 @@ public enum Route {
     INTRO,
     LEADERBOARD,
     SETTINGS,
-    GAME_MAP
+    MAP,
+    COMBAT
 }

@@ -1,6 +1,6 @@
 package it.unicam.cs.mpgc.rpg129072.screens;
 
-import it.unicam.cs.mpgc.rpg129072.components.MenuButton;
+import it.unicam.cs.mpgc.rpg129072.components.Button.MenuButton;
 import it.unicam.cs.mpgc.rpg129072.controllers.MenuController;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,7 +16,6 @@ import javafx.scene.image.ImageView;
 
 
 public class MenuScreen extends StackPane implements Renderable {
-
 
     public MenuScreen(MenuController menuController) {
         // Main layout for the game menu

@@ -1,4 +1,4 @@
-package it.unicam.cs.mpgc.rpg129072.components;
+package it.unicam.cs.mpgc.rpg129072.components.Button;
 
 import javafx.scene.control.Button;
 import javafx.scene.text.Font;

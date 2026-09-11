@@ -1,4 +1,4 @@
-package it.unicam.cs.mpgc.rpg129072.components;
+package it.unicam.cs.mpgc.rpg129072.components.MapCharacter;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

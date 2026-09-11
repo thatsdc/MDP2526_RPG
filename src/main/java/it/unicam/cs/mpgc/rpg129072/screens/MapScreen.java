@@ -1,6 +1,6 @@
 package it.unicam.cs.mpgc.rpg129072.screens;
 
-import it.unicam.cs.mpgc.rpg129072.components.MapCharacter;
+import it.unicam.cs.mpgc.rpg129072.components.MapCharacter.MapCharacter;
 import it.unicam.cs.mpgc.rpg129072.controllers.MapController;
 import it.unicam.cs.mpgc.rpg129072.models.MapManager;
 import javafx.scene.Scene;
@@ -15,6 +15,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.input.KeyCode;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class MapScreen extends Canvas implements Renderable {
@@ -70,7 +71,13 @@ public class MapScreen extends Canvas implements Renderable {
         }
 
         mapManager.getPlayer().render(gc);
-        mapManager.getVisibleEnemies().forEach(it -> it.render(gc));
+        MapCharacter enemy = mapManager.getVisibleEnemy();
+
+        if (enemy != null){
+            enemy.render(gc);
+            HashMap<String, String> payload = new HashMap<>();
+            mapController.startCombat(payload);
+        }
     }
 
     /**
@@ -117,7 +124,7 @@ public class MapScreen extends Canvas implements Renderable {
         AnchorPane uiLayer = this.createUiLayer();
 
         StackPane root = new StackPane(this, uiLayer);
-        root.setStyle("-fx-background-color: green;");
+        root.setStyle("-fx-background-color: black;");
 
         Scene mapScene = new Scene(root);
 

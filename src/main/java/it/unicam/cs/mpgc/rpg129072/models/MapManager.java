@@ -1,6 +1,8 @@
 package it.unicam.cs.mpgc.rpg129072.models;
 
-import it.unicam.cs.mpgc.rpg129072.components.MapCharacter;
+import it.unicam.cs.mpgc.rpg129072.enums.EnemyType;
+import it.unicam.cs.mpgc.rpg129072.components.MapCharacter.MapCharacter;
+import it.unicam.cs.mpgc.rpg129072.components.MapCharacter.MapEnemy;
 import javafx.scene.input.KeyCode;
 
 import java.util.ArrayList;
@@ -33,14 +35,14 @@ public class MapManager {
         );
 
         this.enemies = new ArrayList<>(
-                List.of(
-                    new MapCharacter(
-            "/merfolk-javelineer.png",
-                200, 80,
-            16, 16,
-            4, 2.5
-                )
+            List.of(
+            new MapEnemy(
+                EnemyType.MERFOLK,
+            200, 80,
+        16, 16,
+        4, 2.5
             )
+          )
         );
     }
 
@@ -55,9 +57,7 @@ public class MapManager {
      * Evaluates which enemies are standing on crushed wheat tiles.
      * Only these enemies should be rendered by the MapScreen.
      */
-    public List<MapCharacter> getVisibleEnemies() {
-        List<MapCharacter> visibleEnemies = new ArrayList<>();
-
+    public MapCharacter getVisibleEnemy() {
         for (MapCharacter enemy : this.enemies) {
             int gridX = (int) ((enemy.getPositionX() + enemy.getRenderedWidth() / 2) / this.tileSize);
             int gridY = (int) ((enemy.getPositionY() + enemy.getRenderedHeight() / 2) / this.tileSize);
@@ -65,12 +65,12 @@ public class MapManager {
             // Ensure coordinates are within map boundaries
             if (gridX >= 0 && gridX < this.columns && gridY >= 0 && gridY < this.rows) {
                 if (this.crushedWheatMap[gridX][gridY]) {
-                    visibleEnemies.add(enemy);
+                    return enemy;
                 }
             }
         }
 
-        return visibleEnemies;
+        return null;
     }
 
     /**
