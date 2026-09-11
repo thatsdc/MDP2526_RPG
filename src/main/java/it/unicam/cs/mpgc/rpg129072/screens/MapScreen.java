@@ -22,8 +22,6 @@ public class MapScreen extends Canvas implements Renderable {
     private final MapController mapController;
     private final MapManager mapManager;
 
-    private MapCharacter player;
-
     private final GraphicsContext gc;
 
     private final Image wheat;
@@ -41,13 +39,6 @@ public class MapScreen extends Canvas implements Renderable {
 
         this.mapController = mapController;
         this.mapManager = mapManager;
-
-        this.player = new MapCharacter(
-                "/elf-lord.png",
-                100, 100,
-                16, 16,
-                4, 2.5
-            );
 
         this.gc = this.getGraphicsContext2D();
 
@@ -78,7 +69,8 @@ public class MapScreen extends Canvas implements Renderable {
             }
         }
 
-        this.player.render(gc);
+        mapManager.getPlayer().render(gc);
+        mapManager.getVisibleEnemies().forEach(it -> it.render(gc));
     }
 
     /**
@@ -132,7 +124,7 @@ public class MapScreen extends Canvas implements Renderable {
         // Handle player movement
         mapScene.setOnKeyPressed(event -> {
             KeyCode key = event.getCode();
-            mapManager.handleKeyPress(key, player);
+            mapManager.handleKeyPress(key);
             this.render();
         });
 

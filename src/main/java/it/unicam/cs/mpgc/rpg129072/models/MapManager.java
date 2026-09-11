@@ -3,6 +3,9 @@ package it.unicam.cs.mpgc.rpg129072.models;
 import it.unicam.cs.mpgc.rpg129072.components.MapCharacter;
 import javafx.scene.input.KeyCode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MapManager {
     private final String playerName;
     private int playerScore = 0;
@@ -15,35 +18,85 @@ public class MapManager {
     private final double mapWidth = columns * tileSize;
     private final double mapHeight = rows * tileSize;
 
+    private final MapCharacter player;
+    private final List<MapCharacter> enemies;
+
     public MapManager(String playerName) {
         this.playerName = playerName;
         this.crushedWheatMap = new boolean[columns][rows];
+
+        this.player = new MapCharacter(
+        "/elf-lord.png",
+            100, 80,
+        16, 16,
+        4, 2.5
+        );
+
+        this.enemies = new ArrayList<>(
+                List.of(
+                    new MapCharacter(
+            "/merfolk-javelineer.png",
+                200, 80,
+            16, 16,
+            4, 2.5
+                )
+            )
+        );
+    }
+
+    /**
+     * Registers a new enemy in the map manager.
+     */
+    public void addEnemy(MapCharacter enemy) {
+        this.enemies.add(enemy);
+    }
+
+    /**
+     * Evaluates which enemies are standing on crushed wheat tiles.
+     * Only these enemies should be rendered by the MapScreen.
+     */
+    public List<MapCharacter> getVisibleEnemies() {
+        List<MapCharacter> visibleEnemies = new ArrayList<>();
+
+        for (MapCharacter enemy : this.enemies) {
+            int gridX = (int) ((enemy.getPositionX() + enemy.getRenderedWidth() / 2) / this.tileSize);
+            int gridY = (int) ((enemy.getPositionY() + enemy.getRenderedHeight() / 2) / this.tileSize);
+
+            // Ensure coordinates are within map boundaries
+            if (gridX >= 0 && gridX < this.columns && gridY >= 0 && gridY < this.rows) {
+                if (this.crushedWheatMap[gridX][gridY]) {
+                    visibleEnemies.add(enemy);
+                }
+            }
+        }
+
+        return visibleEnemies;
     }
 
     /**
      * Processes keyboard input to move the player.
      * Returns true if the state changed and the screen needs to be re-rendered.
      */
-    public boolean handleKeyPress(KeyCode key, MapCharacter mapCharacter) {
+    public boolean handleKeyPress(KeyCode key) {
         boolean moved = false;
 
         if (key == KeyCode.W || key == KeyCode.UP) {
-            mapCharacter.move(0, -mapCharacter.getSpeed(), mapWidth, mapHeight);
+            player.move(0, -player.getSpeed(), mapWidth, mapHeight);
             moved = true;
         } else if (key == KeyCode.S || key == KeyCode.DOWN) {
-            mapCharacter.move(0, mapCharacter.getSpeed(), mapWidth, mapHeight);
+            player.move(0, player.getSpeed(), mapWidth, mapHeight);
             moved = true;
         } else if (key == KeyCode.A || key == KeyCode.LEFT) {
-            mapCharacter.move(-mapCharacter.getSpeed(),0, mapWidth, mapHeight);
+            player.move(-player.getSpeed(),0, mapWidth, mapHeight);
              moved = true;
         } else if (key == KeyCode.D || key == KeyCode.RIGHT) {
-            mapCharacter.move(mapCharacter.getSpeed(),0, mapWidth, mapHeight);
+            player.move(player.getSpeed(),0, mapWidth, mapHeight);
             moved = true;
         }
 
         if (moved) {
-            crushWheatAtPosition(mapCharacter.getPositionX() + mapCharacter.getRenderedWidth() / 2,
-                    mapCharacter.getPositionY() + mapCharacter.getRenderedHeight() / 2);
+            crushWheatAtPosition(player.getPositionX() + player.getRenderedWidth() / 2,
+                player.getPositionY() + player.getRenderedHeight() / 2);
         }
 
         return moved;
@@ -61,6 +114,9 @@ public class MapManager {
         }
     }
 
+    public MapCharacter getPlayer(){
+        return player;
+    }
     public String getPlayerName() { return this.playerName; }
     public int getPlayerScore() { return this.playerScore; }
 
