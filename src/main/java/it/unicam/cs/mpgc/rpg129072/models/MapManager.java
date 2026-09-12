@@ -21,12 +21,13 @@ public class MapManager {
     private final double mapHeight = rows * tileSize;
 
     private final MapCharacter player;
-    private final List<MapCharacter> enemies;
+    private final List<MapEnemy> enemies;
 
-    public MapManager(String playerName) {
+    public MapManager(String playerName, int playerScore) {
         this.playerName = playerName;
-        this.crushedWheatMap = new boolean[columns][rows];
+        this.playerScore = playerScore;
 
+        this.crushedWheatMap = new boolean[columns][rows];
         this.player = new MapCharacter(
                 "/characters/map/elf-lord.png",
             100, 80,
@@ -49,7 +50,7 @@ public class MapManager {
     /**
      * Registers a new enemy in the map manager.
      */
-    public void addEnemy(MapCharacter enemy) {
+    public void addEnemy(MapEnemy enemy) {
         this.enemies.add(enemy);
     }
 
@@ -57,8 +58,8 @@ public class MapManager {
      * Evaluates which enemies are standing on crushed wheat tiles.
      * Only these enemies should be rendered by the MapScreen.
      */
-    public MapCharacter getVisibleEnemy() {
-        for (MapCharacter enemy : this.enemies) {
+    public MapEnemy getVisibleEnemy() {
+        for (MapEnemy enemy : this.enemies) {
             int gridX = (int) ((enemy.getPositionX() + enemy.getRenderedWidth() / 2) / this.tileSize);
             int gridY = (int) ((enemy.getPositionY() + enemy.getRenderedHeight() / 2) / this.tileSize);
 

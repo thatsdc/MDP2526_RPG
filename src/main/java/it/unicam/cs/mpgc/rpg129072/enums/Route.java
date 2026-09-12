@@ -7,5 +7,6 @@ public enum Route {
     LEADERBOARD,
     SETTINGS,
     MAP,
-    COMBAT
+    COMBAT,
+    GAME_OVER,
 }

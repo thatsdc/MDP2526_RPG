@@ -67,12 +67,14 @@ public class CombatScreen extends Canvas implements Renderable {
         // --- Top UI: Health Bars and Names ---
 
         // Player HUD anchored to the top-left
-        VBox playerHud = createHudBox("Player Name", 1.0);
+        VBox playerHud = createHudBox(combatManager.getPlayerName(), 1.0);
         AnchorPane.setTopAnchor(playerHud, 20.0);
         AnchorPane.setLeftAnchor(playerHud, 20.0);
 
         // Enemy HUD anchored to the top-right
-        VBox enemyHud = createHudBox("Enemy Name", 1.0);
+        String enemyTypeStr = combatManager.getEnemyType().name();
+        String enemyName = enemyTypeStr.substring(0, 1).toUpperCase() + enemyTypeStr.substring(1).toLowerCase();
+        VBox enemyHud = createHudBox(enemyName, 1.0);
         AnchorPane.setTopAnchor(enemyHud, 20.0);
         AnchorPane.setRightAnchor(enemyHud, 20.0);
 

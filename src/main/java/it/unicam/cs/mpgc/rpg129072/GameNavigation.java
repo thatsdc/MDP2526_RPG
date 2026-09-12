@@ -1,6 +1,7 @@
 package it.unicam.cs.mpgc.rpg129072;
 
 import it.unicam.cs.mpgc.rpg129072.controllers.*;
+import it.unicam.cs.mpgc.rpg129072.enums.EnemyType;
 import it.unicam.cs.mpgc.rpg129072.enums.Route;
 import it.unicam.cs.mpgc.rpg129072.models.CombatManager;
 import it.unicam.cs.mpgc.rpg129072.models.MapManager;
@@ -73,7 +74,8 @@ public class GameNavigation extends Application {
 
                     IntroController introController = new IntroController(
                         mainStage,
-                        () -> navigateTo(Route.MAP, Map.of("playerName", playerName))
+                        () -> navigateTo(Route.MAP,
+                                Map.of("playerName", playerName, "playerScore", "0"))
                         );
                     introScene = new IntroScreen(introController).generateScene();
                 }
@@ -83,11 +85,13 @@ public class GameNavigation extends Application {
             case MAP:
                 if (mapScene == null){
                     String playerName = payload.get("playerName");
+                    int playerScore = Integer.parseInt(payload.get("playerScore"));
+
                     MapController mapController = new MapController(
                         mainStage,
                         (args) -> navigateTo(Route.COMBAT, args)
                     );
-                    MapManager mapManager = new MapManager(playerName);
+                    MapManager mapManager = new MapManager(playerName, playerScore);
                     mapScene = new MapScreen(mapController, mapManager).generateScene();
                 }
                 mainStage.setScene(mapScene);
@@ -95,13 +99,16 @@ public class GameNavigation extends Application {
 
             case COMBAT:
                 if (combatScene == null){
-                    String playerName = "playerName";
-                    int playerHealth = 100;
-                    String enemyName = "enemyName";
-                    int enemyHealth = 100;
+                    String playerName = payload.get("playerName");
+                    int playerScore = Integer.parseInt(payload.get("playerScore"));
+                    EnemyType enemyType = EnemyType.valueOf(payload.get("enemyType"));
 
-                    CombatController combatController = new CombatController(mainStage);
-                    CombatManager combatManager = new CombatManager(playerName, playerHealth, enemyName, enemyHealth);
+                    CombatController combatController = new CombatController(
+                            mainStage,
+                            (args) -> navigateTo(Route.COMBAT, args),
+                            (args) -> navigateTo(Route.GAME_OVER, args)
+                            );
+                    CombatManager combatManager = new CombatManager(playerName, playerScore, enemyType);
                     combatScene = new CombatScreen(combatController, combatManager, SCREEN_WIDTH, SCREEN_HEIGHT).generateScene();
                 }
                 mainStage.setScene(combatScene);

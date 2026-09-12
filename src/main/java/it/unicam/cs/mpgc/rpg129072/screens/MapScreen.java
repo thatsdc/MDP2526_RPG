@@ -1,6 +1,7 @@
 package it.unicam.cs.mpgc.rpg129072.screens;
 
 import it.unicam.cs.mpgc.rpg129072.components.MapCharacter.MapCharacter;
+import it.unicam.cs.mpgc.rpg129072.components.MapCharacter.MapEnemy;
 import it.unicam.cs.mpgc.rpg129072.controllers.MapController;
 import it.unicam.cs.mpgc.rpg129072.models.MapManager;
 import javafx.scene.Scene;
@@ -16,6 +17,7 @@ import javafx.scene.text.Text;
 import javafx.scene.input.KeyCode;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class MapScreen extends Canvas implements Renderable {
@@ -71,11 +73,15 @@ public class MapScreen extends Canvas implements Renderable {
         }
 
         mapManager.getPlayer().render(gc);
-        MapCharacter enemy = mapManager.getVisibleEnemy();
+        MapEnemy enemy = mapManager.getVisibleEnemy();
 
         if (enemy != null){
             enemy.render(gc);
             HashMap<String, String> payload = new HashMap<>();
+            payload.put("playerName", mapManager.getPlayerName());
+            payload.put("playerScore", Integer.toString(mapManager.getPlayerScore()));
+            payload.put("enemyType", enemy.getEnemyType().name());
+
             mapController.startCombat(payload);
         }
     }

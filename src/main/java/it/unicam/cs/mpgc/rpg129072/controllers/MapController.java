@@ -2,7 +2,6 @@ package it.unicam.cs.mpgc.rpg129072.controllers;
 
 import javafx.stage.Stage;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -14,7 +13,7 @@ public class MapController extends Controller {
         this.onStartCombat = onStartCombat;
     }
 
-    public void startCombat(HashMap<String, String> payload){
+    public void startCombat(Map<String, String> payload){
         onStartCombat.accept(payload);
     }
 }
