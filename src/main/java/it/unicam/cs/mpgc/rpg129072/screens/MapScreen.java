@@ -1,6 +1,5 @@
 package it.unicam.cs.mpgc.rpg129072.screens;
 
-import it.unicam.cs.mpgc.rpg129072.components.MapCharacter.MapCharacter;
 import it.unicam.cs.mpgc.rpg129072.components.MapCharacter.MapEnemy;
 import it.unicam.cs.mpgc.rpg129072.controllers.MapController;
 import it.unicam.cs.mpgc.rpg129072.models.MapManager;
@@ -17,7 +16,6 @@ import javafx.scene.text.Text;
 import javafx.scene.input.KeyCode;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class MapScreen extends Canvas implements Renderable {
@@ -29,9 +27,6 @@ public class MapScreen extends Canvas implements Renderable {
 
     private final Image wheat;
     private final Image trampledWheat;
-
-    private Text scoreTextElement;
-    private Text playerTextElement;
 
     public MapScreen(MapController mapController, MapManager mapManager) {
         // Set canvas dimensions based on grid size
@@ -86,41 +81,31 @@ public class MapScreen extends Canvas implements Renderable {
         }
     }
 
-    /**
-     * Updates the text values of the UI elements.
-     */
-    private void updateUI() {
-        if (this.scoreTextElement != null && this.playerTextElement != null) {
-            this.scoreTextElement.setText("Score: " + mapManager.getPlayerScore());
-            this.playerTextElement.setText("Player: " + mapManager.getPlayerName());
-        }
-    }
-
     private AnchorPane createUiLayer(){
         AnchorPane uiLayer = new AnchorPane();
 
         uiLayer.setPickOnBounds(false);
 
         // Setup Player Name Text
-        this.playerTextElement = new Text("Player: " + mapManager.getPlayerName());
-        this.playerTextElement.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-        this.playerTextElement.setFill(Color.WHITE);
-        this.playerTextElement.setStroke(Color.BLACK); // Outline for visibility
+        Text playerTextElement = new Text("Player: " + mapManager.getPlayerName());
+        playerTextElement.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        playerTextElement.setFill(Color.WHITE);
+        playerTextElement.setStroke(Color.BLACK);
 
         // Setup Score Text
-        this.scoreTextElement = new Text("Score: " + mapManager.getPlayerScore());
-        this.scoreTextElement.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-        this.scoreTextElement.setFill(Color.WHITE);
-        this.scoreTextElement.setStroke(Color.BLACK);
+        Text scoreTextElement = new Text("Score: " + mapManager.getPlayerScore());
+        scoreTextElement.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        scoreTextElement.setFill(Color.WHITE);
+        scoreTextElement.setStroke(Color.BLACK);
 
         // Anchor the elements to the corners with a 15px margin
-        AnchorPane.setTopAnchor(this.playerTextElement, 15.0);
-        AnchorPane.setLeftAnchor(this.playerTextElement, 15.0);
+        AnchorPane.setTopAnchor(playerTextElement, 15.0);
+        AnchorPane.setLeftAnchor(playerTextElement, 15.0);
 
-        AnchorPane.setTopAnchor(this.scoreTextElement, 15.0);
-        AnchorPane.setRightAnchor(this.scoreTextElement, 15.0);
+        AnchorPane.setTopAnchor(scoreTextElement, 15.0);
+        AnchorPane.setRightAnchor(scoreTextElement, 15.0);
 
-        uiLayer.getChildren().addAll(this.playerTextElement, this.scoreTextElement);
+        uiLayer.getChildren().addAll(playerTextElement, scoreTextElement);
 
         return uiLayer;
     }

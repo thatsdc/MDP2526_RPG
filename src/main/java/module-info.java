@@ -1,6 +1,7 @@
 module it.unicam.cs.mpgc.rpg129072 {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.desktop;
 
 
     opens it.unicam.cs.mpgc.rpg129072 to javafx.fxml;

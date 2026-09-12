@@ -4,7 +4,6 @@ import it.unicam.cs.mpgc.rpg129072.components.Button.MenuButton;
 import it.unicam.cs.mpgc.rpg129072.controllers.GameOverController;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;

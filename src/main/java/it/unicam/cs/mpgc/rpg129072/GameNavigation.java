@@ -105,7 +105,7 @@ public class GameNavigation extends Application {
 
                     CombatController combatController = new CombatController(
                             mainStage,
-                            (args) -> navigateTo(Route.COMBAT, args),
+                            (args) -> navigateTo(Route.MAP, args),
                             (args) -> navigateTo(Route.GAME_OVER, args)
                             );
                     CombatManager combatManager = new CombatManager(playerName, playerScore, enemyType);
