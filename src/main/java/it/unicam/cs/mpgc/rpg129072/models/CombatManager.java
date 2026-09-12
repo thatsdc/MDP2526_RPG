@@ -3,7 +3,6 @@ package it.unicam.cs.mpgc.rpg129072.models;
 import it.unicam.cs.mpgc.rpg129072.enums.EnemyType;
 
 public class CombatManager {
-
     private final String playerName;
     private final int playerScore;
     private final EnemyType enemyType;
@@ -13,7 +12,7 @@ public class CombatManager {
         this.playerScore = playerScore;
         this.enemyType = enemyType;
     }
-
+    
     public String getPlayerName() {
         return playerName;
     }

@@ -17,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class CombatScreen extends Canvas implements Renderable {
@@ -82,9 +83,13 @@ public class CombatScreen extends Canvas implements Renderable {
         VBox actionMenu = new VBox(15);
         actionMenu.setAlignment(Pos.CENTER_LEFT);
 
-        Button buttonA = new AttackButton("A", null);
-        Button buttonB =  new AttackButton("B", null);
-        Button buttonC =  new AttackButton("C", null);
+        HashMap<String, String> map = new HashMap();
+        map.put("playerName", "Player");
+        map.put("playerScore", "0");
+
+        Button buttonA = new AttackButton("A", () -> combatController.combatDefeat(map));
+        Button buttonB = new AttackButton("B", null);
+        Button buttonC = new AttackButton("C", null);
 
         actionMenu.getChildren().addAll(buttonA, buttonB, buttonC);
 

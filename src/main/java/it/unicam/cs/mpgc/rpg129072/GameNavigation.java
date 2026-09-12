@@ -23,10 +23,10 @@ public class GameNavigation extends Application {
     private Scene setNameScene;
     private Scene mapScene;
     private Scene combatScene;
+    private Scene gameOverScene;
 
     private final int SCREEN_WIDTH = 1280;
     private final int SCREEN_HEIGHT = 720;
-
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -112,6 +112,21 @@ public class GameNavigation extends Application {
                     combatScene = new CombatScreen(combatController, combatManager, SCREEN_WIDTH, SCREEN_HEIGHT).generateScene();
                 }
                 mainStage.setScene(combatScene);
+                break;
+
+            case GAME_OVER:
+                if(gameOverScene == null){
+                    String playerName = payload.get("playerName");
+                    int playerScore = Integer.parseInt(payload.get("playerScore"));
+
+                    GameOverController gameOverController = new GameOverController(
+                            mainStage, playerName, playerScore,
+                            () -> navigateTo(Route.MAP),
+                            () -> navigateTo(Route.MENU)
+                            );
+                    gameOverScene = new GameOverScreen(gameOverController).generateScene();
+                }
+                mainStage.setScene(gameOverScene);
                 break;
         };
     }

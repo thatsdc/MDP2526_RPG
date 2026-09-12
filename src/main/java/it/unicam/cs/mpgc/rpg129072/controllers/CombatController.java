@@ -20,4 +20,8 @@ public class CombatController {
     public void combatWin(Map<String, String> payload){
         onCombatWin.accept(payload);
     }
+
+    public void combatDefeat(Map<String, String> payload){
+        onCombatDefeat.accept(payload);
+    }
 }
