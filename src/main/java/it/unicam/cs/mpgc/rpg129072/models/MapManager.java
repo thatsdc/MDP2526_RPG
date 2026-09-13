@@ -7,6 +7,7 @@ import javafx.scene.input.KeyCode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MapManager {
     private final String playerName;
@@ -50,7 +51,7 @@ public class MapManager {
      * Generates a specified number of enemies at random positions on the map.
      */
     public void generateRandomEnemies(int amount) {
-        java.util.Random random = new java.util.Random();
+        Random random = new Random();
 
         // Calculate the rendered size to prevent enemies from spawning outside the map bounds
         double frameWidth = 16;
@@ -62,8 +63,17 @@ public class MapManager {
         this.enemies.clear();
 
         for (int i = 0; i < amount; i++) {
-            double randomX = random.nextDouble() * (this.mapWidth - renderedWidth);
-            double randomY = random.nextDouble() * (this.mapHeight - renderedHeight);
+            int[] enemyGridCoords = null, playerGridCoords = null;
+            double randomX = 0, randomY = 0;
+
+            while(!(playerGridCoords != null && enemyGridCoords != null && playerGridCoords[0] != enemyGridCoords[0] && playerGridCoords[1] != enemyGridCoords[1])) {
+                randomX = random.nextDouble() * (this.mapWidth - renderedWidth);
+                randomY = random.nextDouble() * (this.mapHeight - renderedHeight);
+
+                enemyGridCoords = this.getPositionGrid(randomX, randomY);
+                playerGridCoords = this.getPositionGrid(player.getPositionX(), player.getPositionY());
+            }
+
 
             EnemyType[] enemyTypes = EnemyType.values();
             EnemyType randomType = enemyTypes[random.nextInt(enemyTypes.length)];
@@ -101,6 +111,15 @@ public class MapManager {
 
         return null;
     }
+    /**
+     * * Obtains a specific position and returns the grid coords containing it.
+     * **/
+    public int[] getPositionGrid(double posX, double posY){
+        int gridX = (int) (posX / tileSize);
+        int gridY = (int) (posY / tileSize);
+
+        return new int[]{gridX, gridY};
+    }
 
     /**
      * Processes keyboard input to move the player.
@@ -134,8 +153,9 @@ public class MapManager {
     }
 
     private void crushWheatAtPosition(double targetX, double targetY) {
-        int gridX = (int) (targetX / tileSize);
-        int gridY = (int) (targetY / tileSize);
+        int[] gridCoords = getPositionGrid(targetX, targetY);
+        int gridX = gridCoords[0];
+        int gridY = gridCoords[1];
 
         if (gridX >= 0 && gridX < columns && gridY >= 0 && gridY < rows) {
             if (!this.crushedWheatMap[gridX][gridY]) {
