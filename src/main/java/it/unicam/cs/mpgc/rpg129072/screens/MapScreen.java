@@ -76,7 +76,10 @@ public class MapScreen extends Canvas implements Renderable {
             payload.put("playerName", mapManager.getPlayerName());
             payload.put("playerScore", Integer.toString(mapManager.getPlayerScore()));
             payload.put("enemyType", enemy.getEnemyType().name());
+            payload.put("playerPos", mapManager.getPlayer().getPositionX()
+                    + "_" + mapManager.getPlayer().getPositionY());
 
+            mapManager.setFreezePlayer(true);
             mapController.startCombat(payload);
         }
     }

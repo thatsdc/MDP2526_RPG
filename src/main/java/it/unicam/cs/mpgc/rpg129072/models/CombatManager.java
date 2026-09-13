@@ -27,7 +27,7 @@ public class CombatManager {
     private String gameMessage = "";
 
     public CombatManager(String playerName, int playerScore, EnemyType enemyType) {
-        this.initialPlayerHealth = 100;
+        this.initialPlayerHealth = 200;
         this.initialEnemyHealth = 100;
 
         this.playerHealth = initialPlayerHealth;

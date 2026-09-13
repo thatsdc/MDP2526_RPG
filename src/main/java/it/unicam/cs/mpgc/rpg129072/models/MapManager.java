@@ -10,7 +10,9 @@ import java.util.List;
 
 public class MapManager {
     private final String playerName;
-    private int playerScore = 0;
+    private int playerScore;
+
+    private boolean freezePlayer = false;
 
     private final int tileSize = 64;
     private final int columns = 15;
@@ -23,35 +25,61 @@ public class MapManager {
     private final MapCharacter player;
     private final List<MapEnemy> enemies;
 
-    public MapManager(String playerName, int playerScore) {
+    public MapManager(String playerName, int playerScore){
+        this(playerName, playerScore, 100, 80);
+    }
+
+    public MapManager(String playerName, int playerScore, double playerPosX, double playerPosY) {
         this.playerName = playerName;
         this.playerScore = playerScore;
 
         this.crushedWheatMap = new boolean[columns][rows];
         this.player = new MapCharacter(
                 "/characters/map/elf-lord.png",
-            100, 80,
+                playerPosX, playerPosY,
         16, 16,
         4, 2.5
         );
+        this.crushWheatAtPosition(playerPosX, playerPosY);
 
-        this.enemies = new ArrayList<>(
-            List.of(
-            new MapEnemy(
-                EnemyType.MERFOLK,
-            200, 80,
-        16, 16,
-        4, 2.5
-            )
-          )
-        );
+        this.enemies = new ArrayList<>();
+        this.generateRandomEnemies(10);
     }
 
     /**
-     * Registers a new enemy in the map manager.
+     * Generates a specified number of enemies at random positions on the map.
      */
-    public void addEnemy(MapEnemy enemy) {
-        this.enemies.add(enemy);
+    public void generateRandomEnemies(int amount) {
+        java.util.Random random = new java.util.Random();
+
+        // Calculate the rendered size to prevent enemies from spawning outside the map bounds
+        double frameWidth = 16;
+        double frameHeight = 16;
+        double scale = 2.5;
+        double renderedWidth = frameWidth * scale;
+        double renderedHeight = frameHeight * scale;
+
+        this.enemies.clear();
+
+        for (int i = 0; i < amount; i++) {
+            double randomX = random.nextDouble() * (this.mapWidth - renderedWidth);
+            double randomY = random.nextDouble() * (this.mapHeight - renderedHeight);
+
+            EnemyType[] enemyTypes = EnemyType.values();
+            EnemyType randomType = enemyTypes[random.nextInt(enemyTypes.length)];
+
+            MapEnemy newEnemy = new MapEnemy(
+                    randomType,
+                    randomX,
+                    randomY,
+                    frameWidth,
+                    frameHeight,
+                    4,
+                    scale
+            );
+
+            this.enemies.add(newEnemy);
+        }
     }
 
     /**
@@ -79,6 +107,8 @@ public class MapManager {
      * Returns true if the state changed and the screen needs to be re-rendered.
      */
     public boolean handleKeyPress(KeyCode key) {
+        if(freezePlayer) return false;
+
         boolean moved = false;
 
         if (key == KeyCode.W || key == KeyCode.UP) {
@@ -110,7 +140,6 @@ public class MapManager {
         if (gridX >= 0 && gridX < columns && gridY >= 0 && gridY < rows) {
             if (!this.crushedWheatMap[gridX][gridY]) {
                 this.crushedWheatMap[gridX][gridY] = true;
-                this.playerScore += 10;
             }
         }
     }
@@ -120,6 +149,13 @@ public class MapManager {
     }
     public String getPlayerName() { return this.playerName; }
     public int getPlayerScore() { return this.playerScore; }
+
+    public boolean getFreezePlayer(){
+        return this.freezePlayer;
+    }
+    public void setFreezePlayer(boolean v){
+        this.freezePlayer = v;
+    }
 
     public int getColumns() { return this.columns; }
     public int getRows() { return this.rows; }

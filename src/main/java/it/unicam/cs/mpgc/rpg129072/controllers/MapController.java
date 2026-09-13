@@ -1,5 +1,6 @@
 package it.unicam.cs.mpgc.rpg129072.controllers;
 
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.util.Map;
@@ -14,6 +15,16 @@ public class MapController extends Controller {
     }
 
     public void startCombat(Map<String, String> payload){
-        onStartCombat.accept(payload);
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+                Platform.runLater(() -> {
+                    onStartCombat.accept(payload);
+                });
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }

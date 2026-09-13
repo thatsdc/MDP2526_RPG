@@ -40,14 +40,21 @@ public class GameNavigation extends Application {
         mainStage.show();
     }
 
+    private void navigateTo(Route route){
+        navigateTo(route, Collections.emptyMap());
+    }
 
     private void navigateTo(Route route, Map<String, String> payload){
+        navigateTo(route, payload, false);
+    }
+
+    private void navigateTo(Route route, Map<String, String> payload, boolean reset){
         switch (route) {
             case MENU:
-                if (menuScene == null){
+                if (menuScene == null || reset){
                     MenuController menuController = new MenuController(
                             mainStage,
-                            () -> navigateTo(Route.SET_NAME),
+                            () -> navigateTo(Route.SET_NAME, Map.of(), true),
                             () -> navigateTo(Route.LEADERBOARD),
                             () -> navigateTo(Route.SETTINGS)
                     );
@@ -57,7 +64,7 @@ public class GameNavigation extends Application {
                 break;
 
             case SET_NAME:
-                if (setNameScene == null) {
+                if (setNameScene == null || reset) {
                     SetNameController setNameController = new SetNameController(
                         mainStage,
                         () -> navigateTo(Route.MENU),
@@ -69,13 +76,15 @@ public class GameNavigation extends Application {
                 break;
 
             case INTRO:
-                if (introScene == null){
+                if (introScene == null || reset){
                     String playerName = payload.get("playerName");
 
                     IntroController introController = new IntroController(
                         mainStage,
                         () -> navigateTo(Route.MAP,
-                                Map.of("playerName", playerName, "playerScore", "0"))
+                                Map.of("playerName", playerName, "playerScore", "0"),
+                                true
+                                )
                         );
                     introScene = new IntroScreen(introController).generateScene();
                 }
@@ -83,29 +92,53 @@ public class GameNavigation extends Application {
                 break;
 
             case MAP:
-                if (mapScene == null){
+                if (mapScene == null || reset){
                     String playerName = payload.get("playerName");
                     int playerScore = Integer.parseInt(payload.get("playerScore"));
+                    String playerPosStr = payload.get("playerPos");
+                    String[] playerPos = null;
+
+                    if (playerPosStr != null){
+                        playerPos = playerPosStr.split("_");
+                    }
 
                     MapController mapController = new MapController(
                         mainStage,
-                        (args) -> navigateTo(Route.COMBAT, args)
+                        (args) -> {
+                            navigateTo(Route.COMBAT, args, true);
+                        }
                     );
-                    MapManager mapManager = new MapManager(playerName, playerScore);
+
+                    MapManager mapManager;
+                    if(playerPos != null){
+                        mapManager = new MapManager(playerName, playerScore,
+                            Double.parseDouble(playerPos[0]),
+                            Double.parseDouble(playerPos[1]));
+                    }else{
+                        mapManager = new MapManager(playerName, playerScore);
+                    }
+
                     mapScene = new MapScreen(mapController, mapManager).generateScene();
                 }
                 mainStage.setScene(mapScene);
                 break;
 
             case COMBAT:
-                if (combatScene == null){
+                if (combatScene == null || reset){
                     String playerName = payload.get("playerName");
                     int playerScore = Integer.parseInt(payload.get("playerScore"));
                     EnemyType enemyType = EnemyType.valueOf(payload.get("enemyType"));
+                    String playerPosStr = payload.get("playerPos");
 
                     CombatController combatController = new CombatController(
                             mainStage,
-                            (args) -> navigateTo(Route.MAP, args),
+                            (args) -> {
+                                if(playerPosStr != null){
+                                    args.put("playerPos", playerPosStr);
+                                }
+
+                                navigateTo(Route.MAP, args, true);
+                                },
                             (args) -> navigateTo(Route.GAME_OVER, args)
                             );
                     CombatManager combatManager = new CombatManager(playerName, playerScore, enemyType);
@@ -115,13 +148,13 @@ public class GameNavigation extends Application {
                 break;
 
             case GAME_OVER:
-                if(gameOverScene == null){
+                if(gameOverScene == null || reset){
                     String playerName = payload.get("playerName");
                     int playerScore = Integer.parseInt(payload.get("playerScore"));
 
                     GameOverController gameOverController = new GameOverController(
                             mainStage, playerName, playerScore,
-                            () -> navigateTo(Route.MAP),
+                            () -> navigateTo(Route.MAP, payload, true),
                             () -> navigateTo(Route.MENU)
                             );
                     gameOverScene = new GameOverScreen(gameOverController).generateScene();
@@ -131,7 +164,4 @@ public class GameNavigation extends Application {
         };
     }
 
-    private void navigateTo(Route route){
-        navigateTo(route, Collections.emptyMap());
-    }
 }

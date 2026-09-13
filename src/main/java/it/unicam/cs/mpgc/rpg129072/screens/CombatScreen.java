@@ -33,12 +33,11 @@ public class CombatScreen extends Canvas implements Renderable {
     private final Image playerImage;
     private final Image enemyImage;
 
-    // Save references to the specific UI elements that change
     private ProgressBar playerHealthBar;
     private Text playerHealthText;
     private ProgressBar enemyHealthBar;
     private Text enemyHealthText;
-    private Text combatLogText; // Reference to the combat chronicle text
+    private Text combatLogText;
 
     public CombatScreen(CombatController combatController, CombatManager combatManager, int screen_width, int screen_height) {
         super(screen_width, screen_height);
@@ -135,12 +134,13 @@ public class CombatScreen extends Canvas implements Renderable {
 
         if (combatManager.getPlayerHealth() <= 0){
             payload.put("playerName", combatManager.getPlayerName());
-            payload.put("playerScore", Integer.toString(combatManager.getPlayerScore()+100));
+            payload.put("playerScore", Integer.toString(combatManager.getPlayerScore()));
             combatController.combatDefeat(payload);
         }
         else if (combatManager.getEnemyHealth() <= 0){
             payload.put("playerName", combatManager.getPlayerName());
-            payload.put("playerScore", Integer.toString(combatManager.getPlayerScore()));
+            // Initial enemy health is the score player earns
+            payload.put("playerScore", Integer.toString(combatManager.getPlayerScore() + combatManager.getInitialEnemyHealth()));
             combatController.combatWin(payload);
         }
     }
