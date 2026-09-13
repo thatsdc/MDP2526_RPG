@@ -2,7 +2,6 @@ package it.unicam.cs.mpgc.rpg129072.screens;
 
 import it.unicam.cs.mpgc.rpg129072.components.Button.AttackButton;
 import it.unicam.cs.mpgc.rpg129072.controllers.CombatController;
-import it.unicam.cs.mpgc.rpg129072.enums.EnemyType;
 import it.unicam.cs.mpgc.rpg129072.managers.CombatManager;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -47,7 +46,7 @@ public class CombatScreen extends Canvas implements Renderable {
         this.combatManager = combatManager;
         this.gc = this.getGraphicsContext2D();
 
-        this.backgroundImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/background/combat-background.jpg")));
+        this.backgroundImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/background/combat_background.jpg")));
         this.playerImage = new Image(this.getCharacterPath("Lord"));
         this.enemyImage = new Image(this.getCharacterPath(combatManager.getEnemyType().name()));
 
