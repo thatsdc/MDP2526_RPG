@@ -4,15 +4,12 @@ import javafx.stage.Stage;
 
 public class MenuController extends Controller {
     Runnable onStartClick;
-    Runnable onLeaderboardClick;
     Runnable onSettingsClick;
 
     public MenuController(Stage stage,
                           Runnable onStartClick,
-                          Runnable onLeaderboardClick,
                           Runnable onSettingsClick){
         this.onStartClick = onStartClick;
-        this.onLeaderboardClick = onLeaderboardClick;
         this.onSettingsClick = onSettingsClick;
         super(stage);
     }
@@ -25,9 +22,6 @@ public class MenuController extends Controller {
         onSettingsClick.run();
     }
 
-    public void openLeaderboard() {
-        onLeaderboardClick.run();
-    }
 
     public void quitGame(){
         stage.close();

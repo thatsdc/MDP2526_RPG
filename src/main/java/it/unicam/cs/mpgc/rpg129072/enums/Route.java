@@ -4,7 +4,6 @@ public enum Route {
     MENU,
     SET_NAME,
     INTRO,
-    LEADERBOARD,
     SETTINGS,
     MAP,
     COMBAT,

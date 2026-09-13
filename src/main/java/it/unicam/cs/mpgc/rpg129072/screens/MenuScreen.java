@@ -43,12 +43,11 @@ public class MenuScreen extends StackPane implements Renderable {
 
         // Menu buttons
         Button startBtn = new MenuButton("Start Game", menuController::startGame);
-        Button leaderboardBtn = new MenuButton("Leaderboard", menuController::openLeaderboard);
         Button optionsBtn = new MenuButton("Options", menuController::openSettings);
         Button exitBtn = new MenuButton("Exit", menuController::quitGame);
 
         // Add elements to the menuLayout
-        menuLayout.getChildren().addAll(gameTitle, startBtn, leaderboardBtn, optionsBtn, exitBtn);
+        menuLayout.getChildren().addAll(gameTitle, startBtn, optionsBtn, exitBtn);
 
         // Add backgroundView and menuLayout to the MenuScreen StackPane
         this.getChildren().addAll(backgroundView, menuLayout);

@@ -53,7 +53,6 @@ public class GameNavigation extends Application {
                     MenuController menuController = new MenuController(
                             mainStage,
                             () -> navigateTo(Route.SET_NAME, Map.of(), true),
-                            () -> navigateTo(Route.LEADERBOARD),
                             () -> navigateTo(Route.SETTINGS)
                     );
                     menuScene = new MenuScreen(menuController).generateScene();
