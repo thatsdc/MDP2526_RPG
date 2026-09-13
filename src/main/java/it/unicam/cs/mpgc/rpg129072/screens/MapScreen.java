@@ -2,7 +2,7 @@ package it.unicam.cs.mpgc.rpg129072.screens;
 
 import it.unicam.cs.mpgc.rpg129072.components.MapCharacter.MapEnemy;
 import it.unicam.cs.mpgc.rpg129072.controllers.MapController;
-import it.unicam.cs.mpgc.rpg129072.models.MapManager;
+import it.unicam.cs.mpgc.rpg129072.managers.MapManager;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;

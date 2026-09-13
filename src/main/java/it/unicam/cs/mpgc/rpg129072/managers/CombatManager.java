@@ -1,4 +1,4 @@
-package it.unicam.cs.mpgc.rpg129072.models;
+package it.unicam.cs.mpgc.rpg129072.managers;
 
 import it.unicam.cs.mpgc.rpg129072.enums.ActionType;
 import it.unicam.cs.mpgc.rpg129072.enums.EnemyType;
@@ -42,14 +42,14 @@ public class CombatManager {
         ActionType enemyAction = getEnemyAction();
         TurnResult turnResult = getTurnResult(playerAction, enemyAction);
 
-        gameMessage = "Player uses " + playerAction + "\n" + "Enemy uses " + enemyAction;
+        gameMessage = getPlayerName() + " uses " + playerAction + "\n" + getEnemyName() +" uses " + enemyAction;
 
         if (turnResult == TurnResult.WIN){
-            playerHealth -= enemyDamage;
-            gameMessage += "\nPlayer lose "+ enemyDamage +" HP";
-        }else if (turnResult == TurnResult.LOSE){
             enemyHealth -= playerDamage;
-            gameMessage += "\nEnemy lose "+ playerDamage +" HP";
+            gameMessage += "\n" + getEnemyName() + " lose " + enemyDamage +" HP";
+        }else if (turnResult == TurnResult.LOSE){
+            playerHealth -= enemyDamage;
+            gameMessage += "\n" + getPlayerName() + " lose " + playerDamage +" HP";
         }else{
             gameMessage += "\nIt's a draw";
         }

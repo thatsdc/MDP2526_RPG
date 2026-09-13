@@ -2,7 +2,7 @@ package it.unicam.cs.mpgc.rpg129072.screens;
 
 import it.unicam.cs.mpgc.rpg129072.components.Button.AttackButton;
 import it.unicam.cs.mpgc.rpg129072.controllers.CombatController;
-import it.unicam.cs.mpgc.rpg129072.models.CombatManager;
+import it.unicam.cs.mpgc.rpg129072.managers.CombatManager;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -39,8 +39,8 @@ public class CombatScreen extends Canvas implements Renderable {
     private Text enemyHealthText;
     private Text combatLogText;
 
-    public CombatScreen(CombatController combatController, CombatManager combatManager, int screen_width, int screen_height) {
-        super(screen_width, screen_height);
+    public CombatScreen(CombatController combatController, CombatManager combatManager, int screenWidth, int screenHeight) {
+        super(screenWidth, screenHeight);
         this.combatController = combatController;
         this.combatManager = combatManager;
         this.gc = this.getGraphicsContext2D();
@@ -53,10 +53,22 @@ public class CombatScreen extends Canvas implements Renderable {
     }
 
     public void render() {
-        this.gc.clearRect(0, 0, this.getWidth(), this.getHeight());
-        this.gc.drawImage(this.backgroundImage, 0, 0, this.getWidth(), this.getHeight());
-        this.gc.drawImage(this.playerImage, 400, 400, 150, 150);
-        this.gc.drawImage(this.enemyImage, 800, 350, 150, 150);
+        double currentWidth = this.getWidth();
+        double currentHeight = this.getHeight();
+
+        this.gc.clearRect(0, 0, currentWidth, currentHeight);
+        this.gc.drawImage(this.backgroundImage, 0, 0, currentWidth, currentHeight);
+
+        double spriteSize = currentHeight * 0.25;
+
+        double playerX = currentWidth * 0.30;
+        double playerY = currentHeight * 0.55;
+
+        double enemyX = currentWidth * 0.65;
+        double enemyY = currentHeight * 0.45;
+
+        this.gc.drawImage(this.playerImage, playerX, playerY, spriteSize, spriteSize);
+        this.gc.drawImage(this.enemyImage, enemyX, enemyY, spriteSize, spriteSize);
     }
 
     @Override

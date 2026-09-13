@@ -1,4 +1,4 @@
-package it.unicam.cs.mpgc.rpg129072.models;
+package it.unicam.cs.mpgc.rpg129072.managers;
 
 import it.unicam.cs.mpgc.rpg129072.enums.EnemyType;
 import it.unicam.cs.mpgc.rpg129072.components.MapCharacter.MapCharacter;
