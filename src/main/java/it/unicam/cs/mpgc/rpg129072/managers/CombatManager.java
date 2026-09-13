@@ -13,22 +13,22 @@ public class CombatManager {
     private final int playerScore;
     private final EnemyType enemyType;
 
-    private final int initialPlayerHealth;
-    private final int initialEnemyHealth;
+    private int initialPlayerHealth;
+    private int initialEnemyHealth;
 
     private int playerHealth;
     private int enemyHealth;
 
-    private int playerDamage = 10;
-    private int enemyDamage = 10;
+    private int playerDamage;
+    private int enemyDamage;
 
     private int turnCount = 1;
 
     private String gameMessage = "";
 
     public CombatManager(String playerName, int playerScore, EnemyType enemyType) {
-        this.initialPlayerHealth = 200;
-        this.initialEnemyHealth = 100;
+        setPlayerInitialHealthAndDamage(playerScore);
+        setEnemyInitialHealthAndDamage(enemyType);
 
         this.playerHealth = initialPlayerHealth;
         this.enemyHealth = initialEnemyHealth;
@@ -36,6 +36,28 @@ public class CombatManager {
         this.playerName = playerName;
         this.playerScore = playerScore;
         this.enemyType = enemyType;
+    }
+
+    private void setPlayerInitialHealthAndDamage(int playerScore){
+        this.initialPlayerHealth = 120 + ((playerScore + 100) / 10);
+        this.playerDamage = 10 + ((playerScore + 100) / 100);
+    }
+
+    private void setEnemyInitialHealthAndDamage(EnemyType enemyType){
+        switch (enemyType){
+            case MERFOLK -> {
+                this.initialEnemyHealth = 80;
+                this.enemyDamage = 15;
+            }
+            case ZOMBIE -> {
+                this.initialEnemyHealth = 100;
+                this.enemyDamage = 10;
+            }
+            case SKELETON -> {
+                this.initialEnemyHealth = 60;
+                this.enemyDamage = 20;
+            }
+        }
     }
 
     public void playTurn(ActionType playerAction){
@@ -46,10 +68,10 @@ public class CombatManager {
 
         if (turnResult == TurnResult.WIN){
             enemyHealth -= playerDamage;
-            gameMessage += "\n" + getEnemyName() + " lose " + enemyDamage +" HP";
+            gameMessage += "\n" + getEnemyName() + " lose " + playerDamage +" HP";
         }else if (turnResult == TurnResult.LOSE){
             playerHealth -= enemyDamage;
-            gameMessage += "\n" + getPlayerName() + " lose " + playerDamage +" HP";
+            gameMessage += "\n" + getPlayerName() + " lose " + enemyDamage +" HP";
         }else{
             gameMessage += "\nIt's a draw";
         }
