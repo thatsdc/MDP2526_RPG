@@ -12,9 +12,7 @@ public class MapEnemy extends MapCharacter {
     }
 
     private static String getEnemyImagePath(EnemyType enemyType){
-        return switch (enemyType){
-            case MERFOLK -> "/characters/map/merfolk.png";
-        };
+        return "/characters/map/" + enemyType.name().toLowerCase() + ".png";
     }
 
     public EnemyType getEnemyType() {

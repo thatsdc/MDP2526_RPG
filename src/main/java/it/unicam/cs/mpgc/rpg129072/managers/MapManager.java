@@ -36,7 +36,7 @@ public class MapManager {
 
         this.crushedWheatMap = new boolean[columns][rows];
         this.player = new MapCharacter(
-                "/characters/map/elf-lord.png",
+                "/characters/map/lord.png",
                 playerPosX, playerPosY,
         16, 16,
         4, 2.5
@@ -73,7 +73,6 @@ public class MapManager {
                 enemyGridCoords = this.getPositionGrid(randomX, randomY);
                 playerGridCoords = this.getPositionGrid(player.getPositionX(), player.getPositionY());
             }
-
 
             EnemyType[] enemyTypes = EnemyType.values();
             EnemyType randomType = enemyTypes[random.nextInt(enemyTypes.length)];

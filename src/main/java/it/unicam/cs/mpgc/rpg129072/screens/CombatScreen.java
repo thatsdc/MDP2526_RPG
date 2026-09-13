@@ -2,6 +2,7 @@ package it.unicam.cs.mpgc.rpg129072.screens;
 
 import it.unicam.cs.mpgc.rpg129072.components.Button.AttackButton;
 import it.unicam.cs.mpgc.rpg129072.controllers.CombatController;
+import it.unicam.cs.mpgc.rpg129072.enums.EnemyType;
 import it.unicam.cs.mpgc.rpg129072.managers.CombatManager;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,6 +21,7 @@ import javafx.scene.text.Text;
 import javafx.geometry.Insets;
 import it.unicam.cs.mpgc.rpg129072.enums.ActionType;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -46,10 +48,15 @@ public class CombatScreen extends Canvas implements Renderable {
         this.gc = this.getGraphicsContext2D();
 
         this.backgroundImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/background/combat-background.jpg")));
-        this.playerImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/characters/combat/elf-lord.png")));
-        this.enemyImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/characters/combat/merfolk.png")));
+        this.playerImage = new Image(this.getCharacterPath("Lord"));
+        this.enemyImage = new Image(this.getCharacterPath(combatManager.getEnemyType().name()));
 
         this.render();
+    }
+
+    public InputStream getCharacterPath(String name){
+        String path = "/characters/combat/" + name.toLowerCase() + ".png";
+        return Objects.requireNonNull(getClass().getResourceAsStream(path));
     }
 
     public void render() {

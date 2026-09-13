@@ -35,7 +35,7 @@ public class MenuScreen extends StackPane implements Renderable {
         menuLayout.setAlignment(Pos.CENTER);
 
         // Game title
-        Text gameTitle = new Text("EPIC GAME");
+        Text gameTitle = new Text("THE VILLAGE DEFENDER");
         gameTitle.setFont(Font.font("Arial", FontWeight.BOLD, 45));
         gameTitle.setFill(Color.WHITE);
         gameTitle.setStroke(Color.BLACK);
