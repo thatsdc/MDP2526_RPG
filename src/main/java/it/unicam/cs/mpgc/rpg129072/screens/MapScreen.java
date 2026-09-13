@@ -29,11 +29,8 @@ public class MapScreen extends Canvas implements Renderable {
     private final Image trampledWheat;
 
     public MapScreen(MapController mapController, MapManager mapManager) {
-        // Set canvas dimensions based on grid size
-        int gridWidth = 15;
-        int gridHeight = 10;
-        int blockSize = 64;
-        super(gridWidth * blockSize, gridHeight * blockSize);
+        super(mapManager.getColumns() * mapManager.getTileSize(),
+                mapManager.getRows() * mapManager.getTileSize());
 
         this.mapController = mapController;
         this.mapManager = mapManager;
@@ -45,7 +42,6 @@ public class MapScreen extends Canvas implements Renderable {
 
         this.render();
     }
-
     /**
      * Clears the canvas, draws the wheat field, and then draws the player on top.
      */
