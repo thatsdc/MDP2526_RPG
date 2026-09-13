@@ -1,6 +1,6 @@
 # 📌 The Village Defender
 
-The Village Defender è un videogioco RPG, dove il giocatore interpreta Lord, un guerriero incaricato di difendere un villaggio.
+The Village Defender è un videogioco RPG dove il giocatore interpreta Lord, un guerriero incaricato di difendere un villaggio.
 Lord dovrà espugnare un enorme campo di grano dove si nascondo nemici insidiosi. Il guerriero dovrà sconfiggere i nemici scegliendo fra
 diverse azioni, ognuna di queste può condurre il guerriero alla vittoria o alla perdita dello scontro.
 
