@@ -1,6 +1,7 @@
 package it.unicam.cs.mpgc.rpg129072.managers;
 
 import it.unicam.cs.mpgc.rpg129072.persistence.JSONPersistence;
+import it.unicam.cs.mpgc.rpg129072.persistence.Persistence;
 import it.unicam.cs.mpgc.rpg129072.persistence.models.Settings;
 import javafx.stage.Stage;
 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsManager {
-    private final JSONPersistence<Settings> settingsPersistence = new JSONPersistence<>("settings.json", Settings.class);
+    private final Persistence<Settings> settingsPersistence = new JSONPersistence<>("settings.json", Settings.class);
     private Settings settings;
     private final Stage stage;
 
