@@ -27,7 +27,7 @@ tasks.withType<JavaCompile> {
 
 application {
     mainModule.set("it.unicam.cs.mpgc.rpg129072")
-    mainClass.set("it.unicam.cs.mpgc.rpg129072.HelloApplication")
+    mainClass.set("it.unicam.cs.mpgc.rpg129072.Launcher")
 }
 
 javafx {
