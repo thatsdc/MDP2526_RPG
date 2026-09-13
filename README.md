@@ -1,21 +1,20 @@
-# 📌 Nome del Progetto
-
-Breve descrizione del progetto (2-3 righe):  
-Spiega cosa fa il programma e a cosa serve.
-
+# 📌 The Village Defender
+The Village Defender è un videogioco RPG, dove il giocatore interpreta Lord, un guerriero incaricato di difendere un villaggio.
+Lord dovrà espugnare un enorme campo di grano dove si nascondo nemici insidiosi. Il guerriero dovrà sconfiggere i nemici scegliendo fra
+diverse azioni, ognuna di queste può condurre il guerriero alla vittoria o alla perdita dello scontro.
 ---
 
 ## 🚀 Come eseguire il progetto
 
 ### Prerequisiti
 - Java 25 (LTS)
-- Gradle
+- Gradle (9.1.0)
 
 ### Istruzioni
 
 ```bash
-git clone <url-del-repository>
-cd <nome-cartella>
+git clone https://github.com/thatsdc/MDP2526_RPG
+cd MDP2526_RPG
 ```
 
 ### Build del progetto
@@ -32,42 +31,7 @@ cd <nome-cartella>
 
 ## 🤖 Uso di strumenti di AI
 
-Indicare **se e come** sono stati utilizzati strumenti di AI (es. ChatGPT, Copilot, ecc.).
-Descrivere in modo chiaro **per quali attività** e **con quale livello di intervento personale**.
-
-È importante dimostrare che:
-* il codice è stato **compreso**
-* l’AI è stata usata come **supporto**, non come sostituto
----
-
-📌 Per una descrizione più dettagliata dell’uso dell’AI, utilizzare la **Wiki del repository**.
-
-
-### Esempi :
-
-* Utilizzato ChatGPT per:
-
-    * comprendere concetti teorici (es. differenza tra classi e oggetti)
-    * chiarire errori di compilazione
-    * suggerimenti su struttura del codice
-
-* Utilizzato Copilot per:
-
-    * autocompletamento di metodi semplici
-    * generazione di codice ripetitivo (es. getter/setter)
-
-* Utilizzato ChatGPT per generare una prima versione di una funzione, poi:
-
-    * modificata e adattata manualmente
-    * testata e corretta personalmente
+Per lo sviluppo di questo progetto è stato utilizzato Gemini (Google AI) come assistente alla programmazione. L'intelligenza artificiale è stata impiegata come supporto tecnico per superare ostacoli implementativi e ottimizzare l'interfaccia, mantenendo la totale paternità logica, architetturale e creativa del software.
 
 ---
-
-Oppure:
-- Non sono stati utilizzati strumenti di AI
-
-
-
-
-
-
+📌 *Per una descrizione più dettagliata o esempi specifici, consultare la Wiki del repository.*
