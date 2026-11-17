@@ -61,14 +61,7 @@ public class SetNameScreen extends StackPane implements Renderable {
                 "-fx-padding: 10px;";
         nameInputField.setStyle(inputStyle);
 
-        // Restrict input to a maximum of 8 characters
-        UnaryOperator<TextFormatter.Change> lengthFilter = change -> {
-            if (change.getControlNewText().length() <= 8) {
-                return change;
-            }
-            return null;
-        };
-        nameInputField.setTextFormatter(new TextFormatter<>(lengthFilter));
+        nameInputField.setTextFormatter(new TextFormatter<>(setNameController.getLengthFilter()));
 
         // Confirm button
         confirmButton.setFont(Font.font("Arial", FontWeight.BOLD, 25));

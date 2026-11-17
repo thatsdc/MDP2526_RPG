@@ -15,8 +15,18 @@ public class SetNameController extends Controller {
         super(stage);
     }
 
-    public void submitName(String name){
+    public void submitName(String name) {
         onSubmitName.accept(name);
+    }
+
+    public UnaryOperator getLengthFilter(){
+        // Restrict input to a maximum of 8 characters
+        UnaryOperator<TextFormatter.Change> lengthFilter = change -> {
+            if (change.getControlNewText().length() <= 8) {
+                return change;
+            }
+            return null;
+        };
     }
 
     public void goBack(){
