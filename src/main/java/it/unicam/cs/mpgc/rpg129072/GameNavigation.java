@@ -6,6 +6,7 @@ import it.unicam.cs.mpgc.rpg129072.managers.CombatManager;
 import it.unicam.cs.mpgc.rpg129072.managers.MapManager;
 import it.unicam.cs.mpgc.rpg129072.managers.SettingsManager;
 import it.unicam.cs.mpgc.rpg129072.screens.*;
+import it.unicam.cs.mpgc.rpg129072.session.GameSession;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -18,6 +19,8 @@ public class GameNavigation extends Application {
 
     private Stage mainStage;
     private SettingsManager settingsManager;
+    private EnemyRegistry enemyRegistry;
+    private final GameSession session = new GameSession();
 
     private Scene menuScene;
     private Scene introScene;
