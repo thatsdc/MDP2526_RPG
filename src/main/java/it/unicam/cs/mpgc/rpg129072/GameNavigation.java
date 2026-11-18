@@ -1,7 +1,6 @@
 package it.unicam.cs.mpgc.rpg129072;
 
 import it.unicam.cs.mpgc.rpg129072.controllers.*;
-import it.unicam.cs.mpgc.rpg129072.enums.EnemyType;
 import it.unicam.cs.mpgc.rpg129072.enums.Route;
 import it.unicam.cs.mpgc.rpg129072.managers.CombatManager;
 import it.unicam.cs.mpgc.rpg129072.managers.MapManager;
@@ -124,7 +123,7 @@ public class GameNavigation extends Application {
                 if (combatScene == null || reset){
                     String playerName = payload.get("playerName");
                     int playerScore = Integer.parseInt(payload.get("playerScore"));
-                    EnemyType enemyType = EnemyType.valueOf(payload.get("enemyType"));
+                    String enemyType = EnemyType.valueOf(payload.get("enemyType"));
                     String playerPosStr = payload.get("playerPos");
 
                     CombatController combatController = new CombatController(

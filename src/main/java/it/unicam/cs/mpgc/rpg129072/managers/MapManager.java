@@ -1,6 +1,5 @@
 package it.unicam.cs.mpgc.rpg129072.managers;
 
-import it.unicam.cs.mpgc.rpg129072.enums.EnemyType;
 import it.unicam.cs.mpgc.rpg129072.components.MapCharacter.MapCharacter;
 import it.unicam.cs.mpgc.rpg129072.components.MapCharacter.MapEnemy;
 import javafx.scene.input.KeyCode;

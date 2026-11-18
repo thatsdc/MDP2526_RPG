@@ -1,8 +1,8 @@
 package it.unicam.cs.mpgc.rpg129072.managers;
 
 import it.unicam.cs.mpgc.rpg129072.enums.ActionType;
-import it.unicam.cs.mpgc.rpg129072.enums.EnemyType;
 import it.unicam.cs.mpgc.rpg129072.enums.TurnResult;
+import it.unicam.cs.mpgc.rpg129072.records.EnemyDefinition;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,31 +11,28 @@ import java.util.Random;
 public class CombatManager {
     private final String playerName;
     private final int playerScore;
-    private final EnemyType enemyType;
+    private final String enemyId;
 
     private int initialPlayerHealth;
-    private int initialEnemyHealth;
 
     private int playerHealth;
     private int enemyHealth;
 
     private int playerDamage;
-    private int enemyDamage;
 
     private int turnCount = 1;
 
     private String gameMessage = "";
 
-    public CombatManager(String playerName, int playerScore, EnemyType enemyType) {
+    public CombatManager(String playerName, int playerScore, EnemyDefinition enemy) {
         setPlayerInitialHealthAndDamage(playerScore);
-        setEnemyInitialHealthAndDamage(enemyType);
+        setEnemyInitialHealthAndDamage(enemy);
 
         this.playerHealth = initialPlayerHealth;
         this.enemyHealth = initialEnemyHealth;
 
         this.playerName = playerName;
         this.playerScore = playerScore;
-        this.enemyType = enemyType;
     }
 
     private void setPlayerInitialHealthAndDamage(int playerScore){
@@ -44,7 +41,7 @@ public class CombatManager {
     }
 
     private void setEnemyInitialHealthAndDamage(String enemyType){
-        
+
     }
 
     public void playTurn(ActionType playerAction){
@@ -96,8 +93,7 @@ public class CombatManager {
     }
 
     public String getEnemyName(){
-        String enemyTypeStr = enemyType.name();
-        return enemyTypeStr.substring(0, 1).toUpperCase() + enemyTypeStr.substring(1).toLowerCase();
+        /** TODO: Use enemy registry method */
     }
 
     public String getGameMessage(){
@@ -132,7 +128,7 @@ public class CombatManager {
         return playerScore;
     }
 
-    public EnemyType getEnemyType() {
-        return enemyType;
+    public String getEnemyId() {
+        return enemyId;
     }
 }

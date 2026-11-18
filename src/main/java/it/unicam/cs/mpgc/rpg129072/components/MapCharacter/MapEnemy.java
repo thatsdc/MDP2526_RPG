@@ -1,7 +1,5 @@
 package it.unicam.cs.mpgc.rpg129072.components.MapCharacter;
 
-import it.unicam.cs.mpgc.rpg129072.enums.EnemyType;
-
 public class MapEnemy extends MapCharacter {
 
     private EnemyType enemyType;
