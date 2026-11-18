@@ -17,17 +17,24 @@ import javafx.scene.image.ImageView;
 
 public class MenuScreen extends StackPane implements Renderable {
 
-    public MenuScreen(MenuController menuController) {
+    private final int screenWidth;
+    private final int screenHeight;
+
+    public MenuScreen(MenuController menuController, int screenWidth, int screenHeight) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+
         // Main layout for the game menu
         this.setAlignment(Pos.CENTER);
+        this.setPrefSize(screenWidth, screenHeight);
 
         String gifPath = getClass().getResource("/background/menu_background.gif").toExternalForm();
         Image backgroundGif = new Image(gifPath);
         ImageView backgroundView = new ImageView(backgroundGif);
 
-        // Bind the image dimensions to the stage
-        backgroundView.fitWidthProperty().bind(menuController.getStage().widthProperty());
-        backgroundView.fitHeightProperty().bind(menuController.getStage().heightProperty());
+        // Size the background to the screen resolution
+        backgroundView.setFitWidth(screenWidth);
+        backgroundView.setFitHeight(screenHeight);
         backgroundView.setPreserveRatio(false);
 
         // Main layout for the game menu buttons and title
@@ -53,7 +60,8 @@ public class MenuScreen extends StackPane implements Renderable {
         this.getChildren().addAll(backgroundView, menuLayout);
     }
 
+    @Override
     public Scene generateScene(){
-        return new Scene(this);
+        return new Scene(this, screenWidth, screenHeight);
     }
 }

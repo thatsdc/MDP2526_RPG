@@ -57,8 +57,9 @@ public class GameNavigation extends Application {
                             () -> navigateTo(Route.SET_NAME, true),
                             () -> navigateTo(Route.SETTINGS)
                     );
-                    menuScene = new MenuScreen(controller).generateScene();
-                }
+                    String[] res = settingsManager.getCurrentResolution().split("x");
+                    menuScene = new MenuScreen(controller,
+                            Integer.parseInt(res[0]), Integer.parseInt(res[1])).generateScene();                }
                 mainStage.setScene(menuScene);
             }
 
