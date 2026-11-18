@@ -85,7 +85,7 @@ public class GameNavigation extends Application {
                             mainStage,
                             () -> navigateTo(Route.MAP, true)
                     );
-                    introScene = new IntroScreen(controller).generateScene();
+                    introScene = new IntroScreen(controller, res_x, res_y).generateScene();
                 }
                 mainStage.setScene(introScene);
             }

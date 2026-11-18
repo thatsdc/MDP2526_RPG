@@ -4,7 +4,6 @@ import it.unicam.cs.mpgc.rpg129072.controllers.IntroController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -15,58 +14,60 @@ import javafx.scene.text.TextAlignment;
 public class IntroScreen extends StackPane implements Renderable {
 
     private final IntroController introController;
+    private final Text loreText = new Text();
 
-    private int displayedMessage = 0;
-    private Text loreText = new Text();
+    private final int screenWidth;
+    private final int screenHeight;
 
-    public IntroScreen(IntroController introController) {
+    public IntroScreen(IntroController introController, int screenWidth, int screenHeight) {
         this.introController = introController;
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
 
         this.setStyle("-fx-background-color: black;");
+        this.setPrefSize(screenWidth, screenHeight);
 
-        String loreMessage = "Long ago, a warrior was charged with protecting\nthis land from unknown entities...\n";
-
-        loreText.setText(loreMessage);
+        // Lore text, wrapped automatically based on the screen width
+        loreText.setText(introController.getCurrentPage());
         loreText.setFont(Font.font("Arial", FontPosture.ITALIC, 32));
         loreText.setFill(Color.WHITE);
         loreText.setTextAlignment(TextAlignment.CENTER);
         loreText.setLineSpacing(10);
+        loreText.setWrappingWidth(screenWidth * 0.8);
 
-        Text skipText = new Text("Press SPACE to skip the intro");
-        skipText.setFont(Font.font("Arial", 16));
-        skipText.setFill(Color.GRAY);
+        // Input hint
+        Text hintText = new Text("Click or press SPACE to continue  ·  ESC to skip");
+        hintText.setFont(Font.font("Arial", 16));
+        hintText.setFill(Color.GRAY);
 
         StackPane.setAlignment(loreText, Pos.CENTER);
-        StackPane.setAlignment(skipText, Pos.BOTTOM_CENTER);
+        StackPane.setAlignment(hintText, Pos.BOTTOM_CENTER);
+        StackPane.setMargin(hintText, new Insets(0, 0, 30, 0));
 
-        // Add a bottom margin to the skip text
-        StackPane.setMargin(skipText, new Insets(0, 0, 30, 0));
+        this.getChildren().addAll(loreText, hintText);
 
-        this.getChildren().addAll(loreText, skipText);
-
-        // Listen mouse click
-        this.setOnMouseClicked(mouseEvent -> triggerContinue());
+        // Mouse click advances to the next page
+        this.setOnMouseClicked(mouseEvent -> showNextPage());
     }
 
     @Override
     public Scene generateScene() {
-        Scene introScene = new Scene(this);
+        Scene introScene = new Scene(this, screenWidth, screenHeight);
 
-        // Listen space bar press
-        introScene.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.SPACE) {
-                triggerContinue();
+        // Key released instead of pressed: holding the key down won't skip several pages
+        introScene.setOnKeyReleased(keyEvent -> {
+            switch (keyEvent.getCode()) {
+                case SPACE -> showNextPage();
+                case ESCAPE -> introController.skip();
+                default -> { }
             }
         });
         return introScene;
     }
 
-    private void triggerContinue() {
-        if(displayedMessage == 0){
-            loreText.setText("For a thousand years, there was peace and quiet, until a months ago...,\nwhen mysterious creatures appeared in the village's wheat fields...");
-            displayedMessage++;
-        }else {
-            this.introController.finishIntro();
+    private void showNextPage() {
+        if (introController.advance()) {
+            loreText.setText(introController.getCurrentPage());
         }
     }
 }
