@@ -12,11 +12,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
-
-
 public class GameNavigation extends Application {
 
     private Stage mainStage;
@@ -114,7 +109,6 @@ public class GameNavigation extends Application {
                             () -> navigateTo(Route.GAME_OVER, true)
                     );
 
-                    String[] res = settingsManager.getCurrentResolution().split("x");
                     int width = Integer.parseInt(res[0]);
                     int height = Integer.parseInt(res[1]);
 
