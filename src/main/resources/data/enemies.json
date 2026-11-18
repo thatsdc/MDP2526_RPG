@@ -1,0 +1,5 @@
+[
+  { "id": "merfolk", "name": "Merfolk", "health": 80, "attack": 15 },
+  { "id": "zombie", "name": "Zombie", "health": 100, "attack": 10 },
+  { "id": "skeleton", "name": "Skeleton", "health": 60, "attack": 20 }
+]

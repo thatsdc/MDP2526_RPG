@@ -43,21 +43,8 @@ public class CombatManager {
         this.playerDamage = 10 + ((playerScore + 100) / 100);
     }
 
-    private void setEnemyInitialHealthAndDamage(EnemyType enemyType){
-        switch (enemyType){
-            case MERFOLK -> {
-                this.initialEnemyHealth = 80;
-                this.enemyDamage = 15;
-            }
-            case ZOMBIE -> {
-                this.initialEnemyHealth = 100;
-                this.enemyDamage = 10;
-            }
-            case SKELETON -> {
-                this.initialEnemyHealth = 60;
-                this.enemyDamage = 20;
-            }
-        }
+    private void setEnemyInitialHealthAndDamage(String enemyType){
+        
     }
 
     public void playTurn(ActionType playerAction){
