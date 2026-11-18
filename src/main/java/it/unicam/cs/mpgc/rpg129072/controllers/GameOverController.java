@@ -1,28 +1,18 @@
 package it.unicam.cs.mpgc.rpg129072.controllers;
 
+import it.unicam.cs.mpgc.rpg129072.session.GameSession;
 import javafx.stage.Stage;
 
 public class GameOverController extends Controller{
-
-    private final String playerName;
-    private final int playerScore;
     private final Runnable onRestartGame;
     private final Runnable onMainMenu;
+    private final GameSession gameSession;
 
-    public GameOverController(Stage stage, String playerName, int playerScore, Runnable onRestartGame, Runnable onMainMenu) {
+    public GameOverController(Stage stage, GameSession gameSession, Runnable onRestartGame, Runnable onMainMenu) {
         super(stage);
-        this.playerName = playerName;
-        this.playerScore = playerScore;
+        this.gameSession = gameSession;
         this.onRestartGame = onRestartGame;
         this.onMainMenu = onMainMenu;
-    }
-
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public int getPlayerScore() {
-        return playerScore;
     }
 
     public void restartGame(){
