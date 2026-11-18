@@ -49,6 +49,10 @@ public class GameNavigation extends Application {
     }
 
     private void navigateTo(Route route, boolean reset) {
+        String[] res = settingsManager.getCurrentResolution().split("x");
+        int res_x = Integer.parseInt(res[0]);
+        int res_y = Integer.parseInt(res[1]);
+
         switch (route) {
             case MENU -> {
                 if (menuScene == null || reset) {
@@ -57,9 +61,8 @@ public class GameNavigation extends Application {
                             () -> navigateTo(Route.SET_NAME, true),
                             () -> navigateTo(Route.SETTINGS)
                     );
-                    String[] res = settingsManager.getCurrentResolution().split("x");
-                    menuScene = new MenuScreen(controller,
-                            Integer.parseInt(res[0]), Integer.parseInt(res[1])).generateScene();                }
+                    menuScene = new MenuScreen(controller, res_x, res_y).generateScene();
+                }
                 mainStage.setScene(menuScene);
             }
 
@@ -71,7 +74,7 @@ public class GameNavigation extends Application {
                             () -> navigateTo(Route.MENU),
                             () -> navigateTo(Route.INTRO, true)
                     );
-                    setNameScene = new SetNameScreen(controller).generateScene();
+                    setNameScene = new SetNameScreen(controller, res_x, res_y).generateScene();
                 }
                 mainStage.setScene(setNameScene);
             }

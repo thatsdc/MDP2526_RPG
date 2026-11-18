@@ -2,34 +2,42 @@ package it.unicam.cs.mpgc.rpg129072.controllers;
 
 import it.unicam.cs.mpgc.rpg129072.session.GameSession;
 import javafx.stage.Stage;
-import javafx.scene.control.TextFormatter;
-import java.util.function.UnaryOperator;
-import java.util.function.Consumer;
+
+import java.util.Objects;
 
 public class SetNameController extends Controller {
 
-    private final Runnable onBackClick;
-    private final Runnable onSubmitName;
+    private static final int MAX_NAME_LENGTH = 8;
+
     private final GameSession gameSession;
+    private final Runnable onBackClick;
+    private final Runnable onNameConfirmed;
 
-    public SetNameController(Stage stage, GameSession gameSession, Runnable onBackClick, Runnable onSubmitName) {
+    public SetNameController(Stage stage, GameSession gameSession,
+                             Runnable onBackClick, Runnable onNameConfirmed) {
         super(stage);
-        this.gameSession = gameSession;
-        this.onBackClick = onBackClick;
-        this.onSubmitName = onSubmitName;
+        this.gameSession = Objects.requireNonNull(gameSession, "gameSession");
+        this.onBackClick = Objects.requireNonNull(onBackClick, "onBackClick");
+        this.onNameConfirmed = Objects.requireNonNull(onNameConfirmed, "onNameConfirmed");
     }
 
-    public void submitName(String name) {
-        onSubmitName.accept(name);
+    public int getMaxNameLength() {
+        return MAX_NAME_LENGTH;
     }
 
-    public UnaryOperator<TextFormatter.Change> getLengthFilter() {
-        return change -> {
-            if (change.getControlNewText().length() <= 8) {
-                return change;
-            }
-            return null;
-        };
+    /**
+     * Validates the name and, if valid, starts a new game.
+     * @return true if the name was accepted, false otherwise
+     */
+    public boolean submitName(String rawName) {
+        if (rawName == null) return false;
+
+        String name = rawName.strip();
+        if (name.isEmpty() || name.length() > MAX_NAME_LENGTH) return false;
+
+        gameSession.startNewGame(name);
+        onNameConfirmed.run();
+        return true;
     }
 
     public void goBack() {

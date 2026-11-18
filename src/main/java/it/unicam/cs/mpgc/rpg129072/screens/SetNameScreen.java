@@ -1,6 +1,7 @@
 package it.unicam.cs.mpgc.rpg129072.screens;
 
 import it.unicam.cs.mpgc.rpg129072.controllers.SetNameController;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,33 +14,42 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import java.util.function.UnaryOperator;
 
 public class SetNameScreen extends StackPane implements Renderable {
+
+    private static final String INPUT_STYLE = "-fx-background-color: #222222; " +
+            "-fx-text-fill: white; " +
+            "-fx-border-color: white; " +
+            "-fx-border-width: 3px; " +
+            "-fx-padding: 10px;";
+    private static final String INPUT_ERROR_STYLE = INPUT_STYLE + "-fx-border-color: red;";
+
+    private static final String BUTTON_DEFAULT_STYLE = "-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-padding: 10 40; -fx-cursor: hand;";
+    private static final String BUTTON_HOVER_STYLE = "-fx-background-color: white; -fx-text-fill: black; -fx-border-color: white; -fx-border-width: 2px; -fx-padding: 10 40; -fx-cursor: hand;";
 
     private final Button backButton = new Button("← Back");
     private final TextField nameInputField = new TextField();
     private final Button confirmButton = new Button("CONFIRM");
 
-    public SetNameScreen(SetNameController setNameController) {
+    private final int screenWidth;
+    private final int screenHeight;
+
+    public SetNameScreen(SetNameController setNameController, int screenWidth, int screenHeight) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+
         this.setStyle("-fx-background-color: black;");
+        this.setPrefSize(screenWidth, screenHeight);
 
         // --- Back Button Setup ---
         backButton.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-
-        String backStyle = "-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;";
-        backButton.setStyle(backStyle);
-
-        // Handle the back action
-        backButton.setOnAction(e -> {
-            setNameController.goBack();
-        });
+        backButton.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;");
+        backButton.setOnAction(e -> setNameController.goBack());
 
         StackPane.setAlignment(backButton, Pos.TOP_LEFT);
         StackPane.setMargin(backButton, new Insets(20, 0, 0, 20));
 
         // --- Main Content Setup ---
-        // Main container to stack elements vertically
         VBox mainContainer = new VBox(40);
         mainContainer.setAlignment(Pos.CENTER);
 
@@ -52,37 +62,31 @@ public class SetNameScreen extends StackPane implements Renderable {
         nameInputField.setMaxWidth(350);
         nameInputField.setAlignment(Pos.CENTER);
         nameInputField.setFont(Font.font("Arial", FontWeight.BOLD, 35));
+        nameInputField.setStyle(INPUT_STYLE);
 
-        // Dark theme styling for the text field
-        String inputStyle = "-fx-background-color: #222222; " +
-                "-fx-text-fill: white; " +
-                "-fx-border-color: white; " +
-                "-fx-border-width: 3px; " +
-                "-fx-padding: 10px;";
-        nameInputField.setStyle(inputStyle);
+        // Block input beyond the maximum length defined by the controller
+        int maxLength = setNameController.getMaxNameLength();
+        nameInputField.setTextFormatter(new TextFormatter<String>(change ->
+                change.getControlNewText().length() <= maxLength ? change : null));
 
-        nameInputField.setTextFormatter(new TextFormatter<>(setNameController.getLengthFilter()));
+        // Remove the error highlight as soon as the user types again
+        nameInputField.textProperty().addListener((obs, oldText, newText) ->
+                nameInputField.setStyle(INPUT_STYLE));
 
         // Confirm button
         confirmButton.setFont(Font.font("Arial", FontWeight.BOLD, 25));
+        confirmButton.setStyle(BUTTON_DEFAULT_STYLE);
+        confirmButton.setOnMouseEntered(e -> confirmButton.setStyle(BUTTON_HOVER_STYLE));
+        confirmButton.setOnMouseExited(e -> confirmButton.setStyle(BUTTON_DEFAULT_STYLE));
 
-        // Button default and hover styles
-        String buttonDefaultStyle = "-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-padding: 10 40; -fx-cursor: hand;";
-        String buttonHoverStyle = "-fx-background-color: white; -fx-text-fill: black; -fx-border-color: white; -fx-border-width: 2px; -fx-padding: 10 40; -fx-cursor: hand;";
-
-        confirmButton.setStyle(buttonDefaultStyle);
-        confirmButton.setOnMouseEntered(e -> confirmButton.setStyle(buttonHoverStyle));
-        confirmButton.setOnMouseExited(e -> confirmButton.setStyle(buttonDefaultStyle));
-
-        // Handle the confirm action
-        confirmButton.setOnAction(e -> {
-            String playerName = nameInputField.getText().trim();
-            if (!playerName.isEmpty()) {
-                setNameController.submitName(playerName);
-            } else {
-                nameInputField.setStyle(inputStyle + "-fx-border-color: red;");
+        // Same action for the button and for the Enter key
+        Runnable submit = () -> {
+            if (!setNameController.submitName(nameInputField.getText())) {
+                nameInputField.setStyle(INPUT_ERROR_STYLE);
             }
-        });
+        };
+        confirmButton.setOnAction(e -> submit.run());
+        nameInputField.setOnAction(e -> submit.run());
 
         mainContainer.getChildren().addAll(promptTitle, nameInputField, confirmButton);
         this.getChildren().addAll(mainContainer, backButton);
@@ -90,6 +94,9 @@ public class SetNameScreen extends StackPane implements Renderable {
 
     @Override
     public Scene generateScene() {
-        return new Scene(this);
+        Scene scene = new Scene(this, screenWidth, screenHeight);
+        // Give focus to the input once the scene is shown
+        Platform.runLater(nameInputField::requestFocus);
+        return scene;
     }
 }
