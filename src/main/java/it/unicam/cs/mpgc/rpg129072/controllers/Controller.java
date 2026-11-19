@@ -1,5 +1,6 @@
 package it.unicam.cs.mpgc.rpg129072.controllers;
 
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 abstract class Controller {
@@ -11,5 +12,9 @@ abstract class Controller {
 
     public Stage getStage(){
         return stage;
+    }
+
+    public void quitGame() {
+        Platform.exit();
     }
 }

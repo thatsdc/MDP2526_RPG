@@ -22,8 +22,4 @@ public class MenuController extends Controller {
     public void openSettings() {
         onOpenSettings.run();
     }
-
-    public void quitGame() {
-        Platform.exit();
-    }
 }

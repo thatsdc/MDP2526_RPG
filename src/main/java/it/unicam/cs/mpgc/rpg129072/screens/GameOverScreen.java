@@ -13,12 +13,15 @@ import javafx.scene.text.Text;
 
 public class GameOverScreen extends StackPane implements Renderable {
 
-    private final GameOverController gameOverController;
+    private final int screenWidth;
+    private final int screenHeight;
 
-    public GameOverScreen(GameOverController gameOverController) {
-        this.gameOverController = gameOverController;
+    public GameOverScreen(GameOverController gameOverController, int screenWidth, int screenHeight) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
 
         this.setStyle("-fx-background-color: black;");
+        this.setPrefSize(screenWidth, screenHeight);
 
         VBox mainContainer = new VBox(40);
         mainContainer.setAlignment(Pos.CENTER);
@@ -29,25 +32,24 @@ public class GameOverScreen extends StackPane implements Renderable {
         gameOverTitle.setStroke(Color.DARKRED);
         gameOverTitle.setStrokeWidth(2);
 
-        Text finalScoreText = new Text("Final Score: "+ gameOverController.getPlayerScore());
+        Text finalScoreText = new Text(gameOverController.getPlayerName()
+                + "'s final score: " + gameOverController.getPlayerScore());
         finalScoreText.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         finalScoreText.setFill(Color.WHITE);
 
-        VBox buttonsContainer = new VBox(15);
+        VBox buttonsContainer = new VBox(15,
+                new MenuButton("Restart Game", gameOverController::restartGame),
+                new MenuButton("Main Menu", gameOverController::mainMenu),
+                new MenuButton("Exit", gameOverController::quitGame)
+        );
         buttonsContainer.setAlignment(Pos.CENTER);
 
-        MenuButton restartButton = new MenuButton("Restart Game", gameOverController::restartGame);
-        MenuButton menuButton = new MenuButton("Main Menu", gameOverController::mainMenu);
-        MenuButton exitButton = new MenuButton("Exit", gameOverController::quitGame);
-
-        buttonsContainer.getChildren().addAll(restartButton, menuButton, exitButton);
         mainContainer.getChildren().addAll(gameOverTitle, finalScoreText, buttonsContainer);
-
         this.getChildren().add(mainContainer);
     }
 
     @Override
     public Scene generateScene() {
-        return new Scene(this, 800, 600);
+        return new Scene(this, screenWidth, screenHeight);
     }
 }
