@@ -2,9 +2,8 @@ package it.unicam.cs.mpgc.rpg129072.screens;
 
 import it.unicam.cs.mpgc.rpg129072.components.Button.SettingsButton;
 import it.unicam.cs.mpgc.rpg129072.controllers.SettingsController;
-import it.unicam.cs.mpgc.rpg129072.managers.SettingsManager;
+import it.unicam.cs.mpgc.rpg129072.persistence.models.Resolution;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,12 +18,10 @@ import javafx.scene.text.Text;
 
 public class SettingsScreen extends StackPane implements Renderable {
 
-    private SettingsManager settingsManager;
-    private SettingsController settingsController;
+    private final SettingsController settingsController;
 
-    public SettingsScreen(SettingsController settingsController, SettingsManager settingsManager) {
+    public SettingsScreen(SettingsController settingsController) {
         this.settingsController = settingsController;
-        this.settingsManager = settingsManager;
 
         this.setStyle("-fx-background-color: black;");
 
@@ -42,11 +39,10 @@ public class SettingsScreen extends StackPane implements Renderable {
         resolutionLabel.setFont(Font.font("Arial", FontWeight.BOLD, 22));
         resolutionLabel.setFill(Color.WHITE);
 
-        ObservableList<String> resolutionOptions = FXCollections.observableArrayList(
-                this.settingsManager.getAvailableResolutions()
+        ComboBox<Resolution> resolutionDropdown = new ComboBox<>(
+                FXCollections.observableArrayList(settingsController.getAvailableResolutions())
         );
-        ComboBox<String> resolutionDropdown = new ComboBox<>(resolutionOptions);
-        resolutionDropdown.getSelectionModel().select(this.settingsManager.getCurrentResolution());
+        resolutionDropdown.setValue(settingsController.getCurrentResolution());
         resolutionDropdown.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
 
         resolutionContainer.getChildren().addAll(resolutionLabel, resolutionDropdown);
@@ -54,14 +50,9 @@ public class SettingsScreen extends StackPane implements Renderable {
         HBox buttonsContainer = new HBox(30);
         buttonsContainer.setAlignment(Pos.CENTER);
 
-        Button applyButton = new SettingsButton("Apply", () -> {
-            String selectedResolution = resolutionDropdown.getValue();
-            this.settingsManager.setScreenResolution(selectedResolution);
-        });
-
-        Button backButton = new SettingsButton("Back", () -> {
-            this.settingsController.backToMenu();
-        });
+        Button backButton = new SettingsButton("Back", settingsController::backToMenu);
+        Button applyButton = new SettingsButton("Apply",
+                () -> settingsController.applyResolution(resolutionDropdown.getValue()));
 
         buttonsContainer.getChildren().addAll(backButton, applyButton);
 
@@ -69,9 +60,8 @@ public class SettingsScreen extends StackPane implements Renderable {
         this.getChildren().add(mainContainer);
     }
 
-
     @Override
     public Scene generateScene() {
-        return new Scene(this, 800, 600);
+        return new Scene(this);
     }
 }

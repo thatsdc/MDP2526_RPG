@@ -2,65 +2,41 @@ package it.unicam.cs.mpgc.rpg129072.managers;
 
 import it.unicam.cs.mpgc.rpg129072.persistence.JSONPersistence;
 import it.unicam.cs.mpgc.rpg129072.persistence.Persistence;
+import it.unicam.cs.mpgc.rpg129072.persistence.models.Resolution;
 import it.unicam.cs.mpgc.rpg129072.persistence.models.Settings;
-import javafx.stage.Stage;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SettingsManager {
-    private final Persistence<Settings> settingsPersistence = new JSONPersistence<>("settings.json", Settings.class);
-    private Settings settings;
-    private final Stage stage;
+    private static final Resolution DEFAULT_RESOLUTION = Resolution.HD;
 
-    static private final List<String> AVAILABLE_RESOLUTIONS = new ArrayList<>(List.of("1280x720", "1920x1080"));
+    private final Persistence<Settings> settingsPersistence =
+            new JSONPersistence<>("settings.json", Settings.class);
+    private final Settings settings;
 
-    public SettingsManager(Stage stage) {
-        Settings savedSettings = settingsPersistence.load();
-        this.stage = stage;
+    public SettingsManager() {
+        Settings loaded = settingsPersistence.load();
+        settings = (loaded != null) ? loaded : new Settings();
 
-        if(savedSettings != null) {
-            settings = savedSettings;
-        }else{
-            createSettingsFile();
+        // Missing file or invalid value: reset to default and persist
+        if (loaded == null || Resolution.fromString(settings.getSavedResolution()).isEmpty()) {
+            settings.setSavedResolution(DEFAULT_RESOLUTION.toString());
+            settingsPersistence.save(settings);
         }
-
-        initSettings();
     }
 
-
-    private void initSettings(){
-        setStageResolution(settings.getSavedResolution());
+    public Resolution getResolution() {
+        return Resolution.fromString(settings.getSavedResolution()).orElse(DEFAULT_RESOLUTION);
     }
 
-    private void createSettingsFile(){
-        settings = new Settings();
+    public void setResolution(Resolution resolution) {
+        Objects.requireNonNull(resolution, "resolution");
+        settings.setSavedResolution(resolution.toString());
         settingsPersistence.save(settings);
     }
 
-    public void setScreenResolution(String resolution){
-        if(AVAILABLE_RESOLUTIONS.contains(resolution)){
-            settings.setSavedResolution(resolution);
-            settingsPersistence.save(settings);
-
-            setStageResolution(
-                resolution
-            );
-        }
-    }
-
-    private void setStageResolution(String resolution){
-        String[] result = resolution.split("x");
-
-        stage.setWidth(Integer.parseInt(result[0]));
-        stage.setHeight(Integer.parseInt(result[1]));
-    }
-
-    public List<String> getAvailableResolutions(){
-        return AVAILABLE_RESOLUTIONS;
-    }
-
-    public String getCurrentResolution(){
-        return settings.getSavedResolution();
+    public List<Resolution> getAvailableResolutions() {
+        return List.of(Resolution.values());
     }
 }
