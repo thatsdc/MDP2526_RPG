@@ -31,15 +31,8 @@ public class SetNameScreen extends StackPane implements Renderable {
     private final TextField nameInputField = new TextField();
     private final Button confirmButton = new Button("CONFIRM");
 
-    private final int screenWidth;
-    private final int screenHeight;
-
-    public SetNameScreen(SetNameController setNameController, int screenWidth, int screenHeight) {
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-
+    public SetNameScreen(SetNameController setNameController) {
         this.setStyle("-fx-background-color: black;");
-        this.setPrefSize(screenWidth, screenHeight);
 
         // --- Back Button Setup ---
         backButton.setFont(Font.font("Arial", FontWeight.BOLD, 18));
@@ -94,8 +87,7 @@ public class SetNameScreen extends StackPane implements Renderable {
 
     @Override
     public Scene generateScene() {
-        Scene scene = new Scene(this, screenWidth, screenHeight);
-        // Give focus to the input once the scene is shown
+        Scene scene = new Scene(this);
         Platform.runLater(nameInputField::requestFocus);
         return scene;
     }

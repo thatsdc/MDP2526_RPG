@@ -13,15 +13,8 @@ import javafx.scene.text.Text;
 
 public class GameOverScreen extends StackPane implements Renderable {
 
-    private final int screenWidth;
-    private final int screenHeight;
-
-    public GameOverScreen(GameOverController gameOverController, int screenWidth, int screenHeight) {
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-
+    public GameOverScreen(GameOverController gameOverController) {
         this.setStyle("-fx-background-color: black;");
-        this.setPrefSize(screenWidth, screenHeight);
 
         VBox mainContainer = new VBox(40);
         mainContainer.setAlignment(Pos.CENTER);
@@ -50,6 +43,6 @@ public class GameOverScreen extends StackPane implements Renderable {
 
     @Override
     public Scene generateScene() {
-        return new Scene(this, screenWidth, screenHeight);
+        return new Scene(this);
     }
 }

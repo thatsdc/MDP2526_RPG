@@ -16,24 +16,17 @@ public class IntroScreen extends StackPane implements Renderable {
     private final IntroController introController;
     private final Text loreText = new Text();
 
-    private final int screenWidth;
-    private final int screenHeight;
-
-    public IntroScreen(IntroController introController, int screenWidth, int screenHeight) {
+    public IntroScreen(IntroController introController) {
         this.introController = introController;
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
 
         this.setStyle("-fx-background-color: black;");
-        this.setPrefSize(screenWidth, screenHeight);
 
-        // Lore text, wrapped automatically based on the screen width
         loreText.setText(introController.getCurrentPage());
         loreText.setFont(Font.font("Arial", FontPosture.ITALIC, 32));
         loreText.setFill(Color.WHITE);
         loreText.setTextAlignment(TextAlignment.CENTER);
         loreText.setLineSpacing(10);
-        loreText.setWrappingWidth(screenWidth * 0.8);
+        loreText.wrappingWidthProperty().bind(this.widthProperty().multiply(0.8));
 
         // Input hint
         Text hintText = new Text("Click or press SPACE to continue  ·  ESC to skip");
@@ -52,13 +45,12 @@ public class IntroScreen extends StackPane implements Renderable {
 
     @Override
     public Scene generateScene() {
-        Scene introScene = new Scene(this, screenWidth, screenHeight);
+        Scene introScene = new Scene(this);
 
         // Key released instead of pressed: holding the key down won't skip several pages
         introScene.setOnKeyReleased(keyEvent -> {
             switch (keyEvent.getCode()) {
                 case SPACE -> showNextPage();
-                case ESCAPE -> introController.skip();
                 default -> { }
             }
         });

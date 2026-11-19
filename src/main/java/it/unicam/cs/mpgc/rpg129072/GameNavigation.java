@@ -30,7 +30,7 @@ public class GameNavigation extends Application {
     @Override
     public void start(Stage stage) {
         mainStage = stage;
-        settingsManager = new SettingsManager(stage);
+        settingsManager = new SettingsManager();
         enemyRegistry = new EnemyRegistry("/data/enemies.json");
 
         mainStage.setTitle("The Village Defender");
@@ -39,15 +39,16 @@ public class GameNavigation extends Application {
         mainStage.show();
     }
 
+    private void show(Scene scene) {
+        mainStage.setScene(scene);
+        SettingsController.resizeStage(mainStage, settingsManager.getResolution());
+    }
+
     private void navigateTo(Route route) {
         navigateTo(route, false);
     }
 
     private void navigateTo(Route route, boolean reset) {
-        String[] res = settingsManager.getCurrentResolution().split("x");
-        int resX = Integer.parseInt(res[0]);
-        int resY = Integer.parseInt(res[1]);
-
         switch (route) {
             case MENU -> {
                 if (menuScene == null || reset) {
@@ -56,9 +57,9 @@ public class GameNavigation extends Application {
                             () -> navigateTo(Route.SET_NAME, true),
                             () -> navigateTo(Route.SETTINGS)
                     );
-                    menuScene = new MenuScreen(controller, resX, resY).generateScene();
+                    menuScene = new MenuScreen(controller).generateScene();
                 }
-                mainStage.setScene(menuScene);
+                show(menuScene);
             }
 
             case SET_NAME -> {
@@ -69,9 +70,9 @@ public class GameNavigation extends Application {
                             () -> navigateTo(Route.MENU),
                             () -> navigateTo(Route.INTRO, true)
                     );
-                    setNameScene = new SetNameScreen(controller, resX, resY).generateScene();
+                    setNameScene = new SetNameScreen(controller).generateScene();
                 }
-                mainStage.setScene(setNameScene);
+                show(setNameScene);
             }
 
             case INTRO -> {
@@ -80,9 +81,9 @@ public class GameNavigation extends Application {
                             mainStage,
                             () -> navigateTo(Route.MAP, true)
                     );
-                    introScene = new IntroScreen(controller, resX, resY).generateScene();
+                    introScene = new IntroScreen(controller).generateScene();
                 }
-                mainStage.setScene(introScene);
+                show(introScene);
             }
 
             case MAP -> {
@@ -95,7 +96,7 @@ public class GameNavigation extends Application {
                     );
                     mapScene = new MapScreen(controller, mapManager).generateScene();
                 }
-                mainStage.setScene(mapScene);
+                show(mapScene);
             }
 
             case COMBAT -> {
@@ -108,13 +109,9 @@ public class GameNavigation extends Application {
                             () -> navigateTo(Route.MAP, true),
                             () -> navigateTo(Route.GAME_OVER, true)
                     );
-
-                    int width = Integer.parseInt(res[0]);
-                    int height = Integer.parseInt(res[1]);
-
-                    combatScene = new CombatScreen(controller, combatManager, width, height).generateScene();
+                    combatScene = new CombatScreen(controller, combatManager).generateScene();
                 }
-                mainStage.setScene(combatScene);
+                show(combatScene);
             }
 
             case GAME_OVER -> {
@@ -125,19 +122,21 @@ public class GameNavigation extends Application {
                             () -> navigateTo(Route.MAP, true),
                             () -> navigateTo(Route.MENU)
                     );
-                    gameOverScene = new GameOverScreen(controller, resX, resY).generateScene();                }
-                mainStage.setScene(gameOverScene);
+                    gameOverScene = new GameOverScreen(controller).generateScene();
+                }
+                show(gameOverScene);
             }
 
             case SETTINGS -> {
                 if (settingsScene == null || reset) {
                     SettingsController controller = new SettingsController(
                             mainStage,
+                            settingsManager,
                             () -> navigateTo(Route.MENU)
                     );
-                    settingsScene = new SettingsScreen(controller, settingsManager).generateScene();
+                    settingsScene = new SettingsScreen(controller).generateScene();
                 }
-                mainStage.setScene(settingsScene);
+                show(settingsScene);
             }
         }
     }

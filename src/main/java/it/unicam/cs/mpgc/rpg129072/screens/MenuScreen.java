@@ -5,37 +5,29 @@ import it.unicam.cs.mpgc.rpg129072.controllers.MenuController;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
 
 public class MenuScreen extends StackPane implements Renderable {
 
-    private final int screenWidth;
-    private final int screenHeight;
-
-    public MenuScreen(MenuController menuController, int screenWidth, int screenHeight) {
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-
+    public MenuScreen(MenuController menuController) {
         // Main layout for the game menu
         this.setAlignment(Pos.CENTER);
-        this.setPrefSize(screenWidth, screenHeight);
 
         String gifPath = getClass().getResource("/background/menu_background.gif").toExternalForm();
-        Image backgroundGif = new Image(gifPath);
-        ImageView backgroundView = new ImageView(backgroundGif);
+        ImageView backgroundView = new ImageView(new Image(gifPath));
 
-        // Size the background to the screen resolution
-        backgroundView.setFitWidth(screenWidth);
-        backgroundView.setFitHeight(screenHeight);
+        // Background always fills the screen, whatever the resolution
+        backgroundView.fitWidthProperty().bind(this.widthProperty());
+        backgroundView.fitHeightProperty().bind(this.heightProperty());
         backgroundView.setPreserveRatio(false);
+        backgroundView.setManaged(false);
 
         // Main layout for the game menu buttons and title
         VBox menuLayout = new VBox(25);
@@ -53,15 +45,13 @@ public class MenuScreen extends StackPane implements Renderable {
         Button optionsBtn = new MenuButton("Options", menuController::openSettings);
         Button exitBtn = new MenuButton("Exit", menuController::quitGame);
 
-        // Add elements to the menuLayout
         menuLayout.getChildren().addAll(gameTitle, startBtn, optionsBtn, exitBtn);
 
-        // Add backgroundView and menuLayout to the MenuScreen StackPane
         this.getChildren().addAll(backgroundView, menuLayout);
     }
 
     @Override
-    public Scene generateScene(){
-        return new Scene(this, screenWidth, screenHeight);
+    public Scene generateScene() {
+        return new Scene(this);
     }
 }
