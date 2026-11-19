@@ -45,8 +45,8 @@ public class GameNavigation extends Application {
 
     private void navigateTo(Route route, boolean reset) {
         String[] res = settingsManager.getCurrentResolution().split("x");
-        int res_x = Integer.parseInt(res[0]);
-        int res_y = Integer.parseInt(res[1]);
+        int resX = Integer.parseInt(res[0]);
+        int resY = Integer.parseInt(res[1]);
 
         switch (route) {
             case MENU -> {
@@ -56,7 +56,7 @@ public class GameNavigation extends Application {
                             () -> navigateTo(Route.SET_NAME, true),
                             () -> navigateTo(Route.SETTINGS)
                     );
-                    menuScene = new MenuScreen(controller, res_x, res_y).generateScene();
+                    menuScene = new MenuScreen(controller, resX, resY).generateScene();
                 }
                 mainStage.setScene(menuScene);
             }
@@ -69,7 +69,7 @@ public class GameNavigation extends Application {
                             () -> navigateTo(Route.MENU),
                             () -> navigateTo(Route.INTRO, true)
                     );
-                    setNameScene = new SetNameScreen(controller, res_x, res_y).generateScene();
+                    setNameScene = new SetNameScreen(controller, resX, resY).generateScene();
                 }
                 mainStage.setScene(setNameScene);
             }
@@ -80,7 +80,7 @@ public class GameNavigation extends Application {
                             mainStage,
                             () -> navigateTo(Route.MAP, true)
                     );
-                    introScene = new IntroScreen(controller, res_x, res_y).generateScene();
+                    introScene = new IntroScreen(controller, resX, resY).generateScene();
                 }
                 mainStage.setScene(introScene);
             }
@@ -125,8 +125,7 @@ public class GameNavigation extends Application {
                             () -> navigateTo(Route.MAP, true),
                             () -> navigateTo(Route.MENU)
                     );
-                    gameOverScene = new GameOverScreen(controller).generateScene();
-                }
+                    gameOverScene = new GameOverScreen(controller, resX, resY).generateScene();                }
                 mainStage.setScene(gameOverScene);
             }
 

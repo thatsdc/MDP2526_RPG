@@ -71,7 +71,7 @@ public class MapScreen extends Canvas implements Renderable {
             HashMap<String, String> payload = new HashMap<>();
             payload.put("playerName", mapManager.getPlayerName());
             payload.put("playerScore", Integer.toString(mapManager.getPlayerScore()));
-            payload.put("enemyType", enemy.getEnemyType().name());
+            payload.put("enemyType", enemy.getEnemyId().name());
             payload.put("playerPos", mapManager.getPlayer().getPositionX()
                     + "_" + mapManager.getPlayer().getPositionY());
 
