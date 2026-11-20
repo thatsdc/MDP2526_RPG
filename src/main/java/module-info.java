@@ -4,6 +4,7 @@ module it.unicam.cs.mpgc.rpg129072 {
     requires java.desktop;
     requires com.google.gson;
     opens it.unicam.cs.mpgc.rpg129072.persistence.models to com.google.gson;
+    opens it.unicam.cs.mpgc.rpg129072.records to com.google.gson;
 
     opens it.unicam.cs.mpgc.rpg129072 to javafx.fxml;
     exports it.unicam.cs.mpgc.rpg129072;
