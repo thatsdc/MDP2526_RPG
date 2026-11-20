@@ -2,33 +2,31 @@ package it.unicam.cs.mpgc.rpg129072.screens;
 
 import it.unicam.cs.mpgc.rpg129072.components.MapCharacter.MapEnemy;
 import it.unicam.cs.mpgc.rpg129072.controllers.MapController;
-import it.unicam.cs.mpgc.rpg129072.managers.MapManager;
+import it.unicam.cs.mpgc.rpg129072.interfaces.MapState;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.input.KeyCode;
 
-import java.util.HashMap;
 import java.util.Objects;
 
 public class MapScreen extends Canvas implements Renderable {
 
     private final MapController mapController;
-    private final MapManager mapManager;
+    private final MapState mapManager;
 
     private final GraphicsContext gc;
 
     private final Image wheat;
     private final Image trampledWheat;
 
-    public MapScreen(MapController mapController, MapManager mapManager) {
+    public MapScreen(MapController mapController, MapState mapManager) {
         super(mapManager.getColumns() * mapManager.getTileSize(),
                 mapManager.getRows() * mapManager.getTileSize());
 
@@ -37,52 +35,42 @@ public class MapScreen extends Canvas implements Renderable {
 
         this.gc = this.getGraphicsContext2D();
 
-        this.wheat = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/map_tiles/wheat_tile.png")));
-        this.trampledWheat = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/map_tiles/wheat_tile_trampled.png")));
+        this.wheat = new Image(Objects.requireNonNull(
+                getClass().getResourceAsStream("/map_tiles/wheat_tile.png"), "Missing wheat tile"));
+        this.trampledWheat = new Image(Objects.requireNonNull(
+                getClass().getResourceAsStream("/map_tiles/wheat_tile_trampled.png"), "Missing trampled wheat tile"));
 
         this.render();
     }
-    /**
-     * Clears the canvas, draws the wheat field, and then draws the player on top.
-     */
+
     public void render() {
+        int tileSize = mapManager.getTileSize();
+
         // Clear the entire canvas
         gc.clearRect(0, 0, this.getWidth(), this.getHeight());
+
+        // Subtle border for tiles
+        gc.setStroke(Color.rgb(0, 0, 0, 0.1));
 
         // Render the wheat map
         for (int x = 0; x < mapManager.getColumns(); x++) {
             for (int y = 0; y < mapManager.getRows(); y++) {
-
-                int tileSize = mapManager.getTileSize();
                 Image tileToDraw = mapManager.isWheatCrushed(x, y) ? this.trampledWheat : this.wheat;
                 gc.drawImage(tileToDraw, x * tileSize, y * tileSize, tileSize, tileSize);
-
-                // Subtle border for tiles
-                gc.setStroke(Color.rgb(0, 0, 0, 0.1));
                 gc.strokeRect(x * tileSize, y * tileSize, tileSize, tileSize);
             }
         }
 
         mapManager.getPlayer().render(gc);
+
         MapEnemy enemy = mapManager.getVisibleEnemy();
-
-        if (enemy != null){
+        if (enemy != null) {
             enemy.render(gc);
-            HashMap<String, String> payload = new HashMap<>();
-            payload.put("playerName", mapManager.getPlayerName());
-            payload.put("playerScore", Integer.toString(mapManager.getPlayerScore()));
-            payload.put("enemyType", enemy.getEnemyId().name());
-            payload.put("playerPos", mapManager.getPlayer().getPositionX()
-                    + "_" + mapManager.getPlayer().getPositionY());
-
-            mapManager.setFreezePlayer(true);
-            mapController.startCombat(payload);
         }
     }
 
-    private AnchorPane createUiLayer(){
+    private AnchorPane createUiLayer() {
         AnchorPane uiLayer = new AnchorPane();
-
         uiLayer.setPickOnBounds(false);
 
         // Setup Player Name Text
@@ -120,9 +108,9 @@ public class MapScreen extends Canvas implements Renderable {
 
         // Handle player movement
         mapScene.setOnKeyPressed(event -> {
-            KeyCode key = event.getCode();
-            mapManager.handleKeyPress(key);
-            this.render();
+            if (mapController.handleKeyPress(event.getCode())) {
+                this.render();
+            }
         });
 
         return mapScene;
