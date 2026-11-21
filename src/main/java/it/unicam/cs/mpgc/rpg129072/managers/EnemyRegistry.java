@@ -23,49 +23,49 @@ public final class EnemyRegistry {
     public EnemyRegistry(String resourcePath) {
         InputStream in = getClass().getResourceAsStream(resourcePath);
         if (in == null) {
-            throw new IllegalStateException("Risorsa non trovata: " + resourcePath);
+            throw new IllegalStateException("Resources not found: " + resourcePath);
         }
 
         try (Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
             List<EnemyDefinition> list = new Gson().fromJson(reader, ENEMY_LIST_TYPE);
 
             if (list == null) {
-                throw new IllegalStateException("File vuoto: " + resourcePath);
+                throw new IllegalStateException("Empty file: " + resourcePath);
             }
 
             for (EnemyDefinition e : list) {
                 validate(e);
                 if (enemies.putIfAbsent(e.id(), e) != null) {
-                    throw new IllegalStateException("Id nemico duplicato: " + e.id());
+                    throw new IllegalStateException("EnemyId duplicated: " + e.id());
                 }
             }
         } catch (IOException ex) {
-            throw new UncheckedIOException("Impossibile caricare i nemici", ex);
+            throw new UncheckedIOException("Impossible load enemies", ex);
         } catch (JsonParseException ex) {
-            throw new IllegalStateException("JSON non valido in " + resourcePath, ex);
+            throw new IllegalStateException("Invalid JSON in " + resourcePath, ex);
         }
 
         if (enemies.isEmpty()) {
-            throw new IllegalStateException("Nessun nemico definito in " + resourcePath);
+            throw new IllegalStateException("No enemy defined in " + resourcePath);
         }
     }
 
     private void validate(EnemyDefinition e) {
         if (e == null || e.id() == null || e.id().isBlank() || e.name() == null) {
-            throw new IllegalStateException("Nemico con id o nome mancante: " + e);
+            throw new IllegalStateException("Enemy with missing id or name: " + e);
         }
         if (e.health() <= 0 || e.attack() < 0) {
-            throw new IllegalStateException("Statistiche non valide per: " + e.id());
+            throw new IllegalStateException("Stats not valid for: " + e.id());
         }
         if (getClass().getResource(e.spritePath()) == null) {
-            throw new IllegalStateException("Sprite mancante: " + e.spritePath());
+            throw new IllegalStateException("Missing sprite: " + e.spritePath());
         }
     }
 
     public EnemyDefinition get(String id) {
         EnemyDefinition e = enemies.get(id);
         if (e == null) {
-            throw new IllegalArgumentException("Nemico sconosciuto: " + id);
+            throw new IllegalArgumentException("Unkown enemy: " + id);
         }
         return e;
     }

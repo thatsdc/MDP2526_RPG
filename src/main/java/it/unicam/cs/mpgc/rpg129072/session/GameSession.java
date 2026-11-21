@@ -14,7 +14,7 @@ public class GameSession {
 
     public void startNewGame(String playerName) {
         if (playerName == null || playerName.isBlank()) {
-            throw new IllegalArgumentException("Il nome del giocatore non può essere vuoto");
+            throw new IllegalArgumentException("Player name cannot be empty");
         }
         this.playerName = playerName;
         this.score = 0;
@@ -31,7 +31,7 @@ public class GameSession {
     }
 
     public void addScore(int points) {
-        if (points < 0) throw new IllegalArgumentException("Punti negativi: " + points);
+        if (points < 0) throw new IllegalArgumentException("Negative points: " + points);
         score += points;
     }
 
@@ -53,7 +53,7 @@ public class GameSession {
 
     public EnemyDefinition getCurrentEnemy() {
         if (currentEnemy == null) {
-            throw new IllegalStateException("Nessun combattimento in corso");
+            throw new IllegalStateException("No combat ongoing currently");
         }
         return currentEnemy;
     }
