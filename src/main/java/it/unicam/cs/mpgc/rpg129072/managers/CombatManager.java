@@ -2,7 +2,6 @@ package it.unicam.cs.mpgc.rpg129072.managers;
 
 import it.unicam.cs.mpgc.rpg129072.enums.ActionType;
 import it.unicam.cs.mpgc.rpg129072.enums.TurnResult;
-import it.unicam.cs.mpgc.rpg129072.interfaces.CombatState;
 import it.unicam.cs.mpgc.rpg129072.records.EnemyDefinition;
 import it.unicam.cs.mpgc.rpg129072.session.GameSession;
 

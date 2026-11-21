@@ -1,4 +1,4 @@
-package it.unicam.cs.mpgc.rpg129072.interfaces;
+package it.unicam.cs.mpgc.rpg129072.managers;
 
 import it.unicam.cs.mpgc.rpg129072.records.EnemyDefinition;
 

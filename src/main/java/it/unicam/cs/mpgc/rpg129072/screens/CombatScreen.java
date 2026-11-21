@@ -3,7 +3,7 @@ package it.unicam.cs.mpgc.rpg129072.screens;
 import it.unicam.cs.mpgc.rpg129072.components.Button.AttackButton;
 import it.unicam.cs.mpgc.rpg129072.controllers.CombatController;
 import it.unicam.cs.mpgc.rpg129072.enums.ActionType;
-import it.unicam.cs.mpgc.rpg129072.interfaces.CombatState;
+import it.unicam.cs.mpgc.rpg129072.managers.CombatState;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
