@@ -29,7 +29,7 @@ public class IntroScreen extends StackPane implements Renderable {
         loreText.wrappingWidthProperty().bind(this.widthProperty().multiply(0.8));
 
         // Input hint
-        Text hintText = new Text("Click or press SPACE to continue  ·  ESC to skip");
+        Text hintText = new Text("Click or press SPACE to continue");
         hintText.setFont(Font.font("Arial", 16));
         hintText.setFill(Color.GRAY);
 
