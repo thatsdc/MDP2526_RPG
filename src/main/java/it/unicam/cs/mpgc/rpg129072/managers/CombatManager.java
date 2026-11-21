@@ -2,133 +2,124 @@ package it.unicam.cs.mpgc.rpg129072.managers;
 
 import it.unicam.cs.mpgc.rpg129072.enums.ActionType;
 import it.unicam.cs.mpgc.rpg129072.enums.TurnResult;
+import it.unicam.cs.mpgc.rpg129072.interfaces.CombatState;
 import it.unicam.cs.mpgc.rpg129072.records.EnemyDefinition;
+import it.unicam.cs.mpgc.rpg129072.session.GameSession;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
-public class CombatManager {
-    private final String playerName;
-    private final int playerScore;
-    private final String enemyId;
+public class CombatManager implements CombatState {
+    private static final int BASE_PLAYER_HEALTH = 120;
+    private static final int BASE_PLAYER_DAMAGE = 10;
+    private static final int SCORE_OFFSET = 100;
+    private static final int HEALTH_SCORE_DIVISOR = 10;
+    private static final int DAMAGE_SCORE_DIVISOR = 100;
 
-    private int initialPlayerHealth;
+    private final String playerName;
+    private final EnemyDefinition enemy;
+    private final Random random;
+
+    private final int initialPlayerHealth;
+    private final int playerDamage;
+    private final int initialEnemyHealth;
+    private final int enemyDamage;
 
     private int playerHealth;
     private int enemyHealth;
-
-    private int playerDamage;
-
     private int turnCount = 1;
+    private String gameMessage;
 
-    private String gameMessage = "";
+    public CombatManager(GameSession session) {
+        this(session, new Random());
+    }
 
-    public CombatManager(String playerName, int playerScore, EnemyDefinition enemy) {
-        setPlayerInitialHealthAndDamage(playerScore);
-        setEnemyInitialHealthAndDamage(enemy);
+    CombatManager(GameSession session, Random random) {
+        Objects.requireNonNull(session, "session");
+        this.random = Objects.requireNonNull(random, "random");
+
+        this.playerName = session.getPlayerName();
+        this.enemy = session.getCurrentEnemy();
+
+        int score = session.getScore();
+        this.initialPlayerHealth = BASE_PLAYER_HEALTH + (score + SCORE_OFFSET) / HEALTH_SCORE_DIVISOR;
+        this.playerDamage = BASE_PLAYER_DAMAGE + (score + SCORE_OFFSET) / DAMAGE_SCORE_DIVISOR;
+
+        this.initialEnemyHealth = enemy.health();
+        this.enemyDamage = enemy.attack();
 
         this.playerHealth = initialPlayerHealth;
         this.enemyHealth = initialEnemyHealth;
 
-        this.playerName = playerName;
-        this.playerScore = playerScore;
+        this.gameMessage = "A wild " + enemy.name() + " appears! Choose an action.";
     }
 
-    private void setPlayerInitialHealthAndDamage(int playerScore){
-        this.initialPlayerHealth = 120 + ((playerScore + 100) / 10);
-        this.playerDamage = 10 + ((playerScore + 100) / 100);
-    }
-
-    private void setEnemyInitialHealthAndDamage(String enemyType){
-
-    }
-
-    public void playTurn(ActionType playerAction){
-        ActionType enemyAction = getEnemyAction();
-        TurnResult turnResult = getTurnResult(playerAction, enemyAction);
-
-        gameMessage = getPlayerName() + " uses " + playerAction + "\n" + getEnemyName() +" uses " + enemyAction;
-
-        if (turnResult == TurnResult.WIN){
-            enemyHealth -= playerDamage;
-            gameMessage += "\n" + getEnemyName() + " lose " + playerDamage +" HP";
-        }else if (turnResult == TurnResult.LOSE){
-            playerHealth -= enemyDamage;
-            gameMessage += "\n" + getPlayerName() + " lose " + enemyDamage +" HP";
-        }else{
-            gameMessage += "\nIt's a draw";
+    /**
+     * Plays one turn: the enemy picks a random action and the loser of the exchange takes damage.
+     * @return the outcome of the turn from the player's point of view
+     */
+    public TurnResult playTurn(ActionType playerAction) {
+        Objects.requireNonNull(playerAction, "playerAction");
+        if (isOver()) {
+            throw new IllegalStateException("The combat is already over");
         }
 
-        turnCount += 1;
-    }
+        ActionType enemyAction = randomEnemyAction();
+        TurnResult result = resolve(playerAction, enemyAction);
 
-    private TurnResult getTurnResult(ActionType playerAction, ActionType enemyAction){
-        if (playerAction == ActionType.ATTACK){
-            if (enemyAction == ActionType.CUNNING) return TurnResult.WIN;
-            else if (enemyAction == ActionType.DEFENSE) return TurnResult.LOSE;
-            else return TurnResult.DRAW;
+        StringBuilder message = new StringBuilder()
+                .append(playerName).append(" uses ").append(playerAction.getDisplayName()).append('\n')
+                .append(enemy.name()).append(" uses ").append(enemyAction.getDisplayName()).append('\n');
+
+        switch (result) {
+            case WIN -> {
+                enemyHealth = Math.max(0, enemyHealth - playerDamage);
+                message.append(enemy.name()).append(" loses ").append(playerDamage).append(" HP");
+            }
+            case LOSE -> {
+                playerHealth = Math.max(0, playerHealth - enemyDamage);
+                message.append(playerName).append(" loses ").append(enemyDamage).append(" HP");
+            }
+            case DRAW -> message.append("It's a draw");
         }
-        else if (playerAction == ActionType.DEFENSE){
-            if (enemyAction == ActionType.ATTACK) return TurnResult.WIN;
-            else if (enemyAction == ActionType.CUNNING) return TurnResult.LOSE;
-            else return TurnResult.DRAW;
-        }
-        else if (playerAction == ActionType.CUNNING){
-            if (enemyAction == ActionType.DEFENSE) return TurnResult.WIN;
-            else if (enemyAction == ActionType.ATTACK) return TurnResult.LOSE;
-            else return TurnResult.DRAW;
-        }
 
-        return null;
+        gameMessage = message.toString();
+        turnCount++;
+        return result;
     }
 
-    private ActionType getEnemyAction(){
-        List<ActionType> items = Arrays.asList(ActionType.ATTACK, ActionType.DEFENSE, ActionType.CUNNING);
-
-        Random random = new Random();
-        int randomIndex = random.nextInt(items.size());
-
-        return items.get(randomIndex);
+    @Override
+    public boolean isOver() {
+        return playerHealth == 0 || enemyHealth == 0;
     }
 
-    public String getEnemyName(){
-        /** TODO: Use enemy registry method */
+    public boolean isPlayerWinner() {
+        return enemyHealth == 0 && playerHealth > 0;
     }
 
-    public String getGameMessage(){
-        return gameMessage;
-    }
-
-    public int getTurnCount(){
-        return turnCount;
-    }
-
-    public int getInitialPlayerHealth(){
-        return initialPlayerHealth;
-    }
-
-    public int getInitialEnemyHealth(){
+    public int getReward() {
         return initialEnemyHealth;
     }
 
-    public int getPlayerHealth() {
-        return playerHealth;
+    private static TurnResult resolve(ActionType playerAction, ActionType enemyAction) {
+        if (playerAction == enemyAction) return TurnResult.DRAW;
+        return playerAction.beats(enemyAction) ? TurnResult.WIN : TurnResult.LOSE;
     }
 
-    public int getEnemyHealth() {
-        return enemyHealth;
+    private ActionType randomEnemyAction() {
+        ActionType[] actions = ActionType.values();
+        return actions[random.nextInt(actions.length)];
     }
 
-    public String getPlayerName() {
-        return playerName;
-    }
+    // --- CombatState ---
 
-    public int getPlayerScore() {
-        return playerScore;
-    }
-
-    public String getEnemyId() {
-        return enemyId;
-    }
+    @Override public String getPlayerName() { return playerName; }
+    @Override public String getEnemyName() { return enemy.name(); }
+    @Override public EnemyDefinition getEnemy() { return enemy; }
+    @Override public int getPlayerHealth() { return playerHealth; }
+    @Override public int getInitialPlayerHealth() { return initialPlayerHealth; }
+    @Override public int getEnemyHealth() { return enemyHealth; }
+    @Override public int getInitialEnemyHealth() { return initialEnemyHealth; }
+    @Override public String getGameMessage() { return gameMessage; }
+    @Override public int getTurnCount() { return turnCount; }
 }
